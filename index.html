@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAELIA SYSTEMS — Motherboard</title>
+<style>
+/* ============ CAELIA MOTHERBOARD — NIGHT / LIGHTED SCI-FI ============ */
+:root{
+  --bg0:#04061a; --bg1:#060a24; --bg2:#0a1030;
+  --panel:rgba(13,20,50,.88); --panel2:rgba(18,26,62,.92);
+  --line:rgba(80,140,255,.28); --line2:rgba(140,90,255,.30);
+  --cyan:#38e1ff; --blue:#5b8cff; --purple:#b06bff; --pink:#ff6bd8;
+  --txt:#eef2ff; --dim:#9aa7d8; --faint:#5f6b9e;
+  --ok:#34e0a1; --warn:#ffcf5c; --bad:#ff6b8a;
+  --r:16px; --rs:10px;
+  --glow-c:0 0 12px rgba(56,225,255,.55),0 0 34px rgba(56,225,255,.22);
+  --glow-p:0 0 12px rgba(176,107,255,.55),0 0 34px rgba(176,107,255,.22);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:radial-gradient(1200px 700px at 20% -10%,#14215e 0%,transparent 60%),
+             radial-gradient(1000px 600px at 90% 10%,#3b1160 0%,transparent 55%),
+             radial-gradient(900px 900px at 50% 110%,#0a2a5e 0%,transparent 60%),
+             linear-gradient(180deg,var(--bg1),var(--bg0));
+  color:var(--txt); overflow:hidden; font-size:14px;
+}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:rgba(10,16,44,.6)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--cyan),var(--purple));border-radius:6px}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit}
+
+/* ---------- app frame ---------- */
+#frame{position:fixed;inset:10px;border-radius:22px;padding:2px;
+  background:linear-gradient(135deg,rgba(56,225,255,.7),rgba(176,107,255,.15) 30%,rgba(255,107,216,.5) 65%,rgba(56,225,255,.7));
+  box-shadow:0 0 40px rgba(56,120,255,.25),inset 0 0 60px rgba(20,40,120,.25);}
+#app{position:relative;height:100%;border-radius:20px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(6,10,32,.96),rgba(4,6,26,.98));
+  display:grid;grid-template-rows:64px 1fr;grid-template-columns:196px 1fr;
+  grid-template-areas:"head head" "side main";}
+#app::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+   radial-gradient(600px 200px at 15% 0%,rgba(56,225,255,.10),transparent 70%),
+   radial-gradient(500px 260px at 85% 0%,rgba(255,107,216,.08),transparent 70%);}
+#app>*{position:relative;z-index:1}
+
+/* ---------- header ---------- */
+header{grid-area:head;display:flex;align-items:center;gap:14px;padding:0 18px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(90deg,rgba(10,16,48,.9),rgba(24,14,64,.75),rgba(10,16,48,.9));}
+.brand{display:flex;align-items:center;gap:12px;min-width:270px}
+.brand .mark{width:44px;height:44px;filter:drop-shadow(0 0 8px rgba(56,225,255,.8))}
+.brand h1{font-size:21px;letter-spacing:2.5px;font-weight:800;
+  background:linear-gradient(90deg,#fff,var(--cyan) 45%,var(--purple));
+  -webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+.brand small{display:block;font-size:8.5px;letter-spacing:3.2px;color:var(--dim);font-weight:600}
+.searchbar{flex:1;max-width:520px;margin:0 auto;display:flex;align-items:center;gap:8px;
+  background:rgba(8,14,40,.85);border:1px solid var(--line2);border-radius:999px;padding:7px 8px 7px 16px;
+  box-shadow:inset 0 0 18px rgba(56,120,255,.12)}
+.searchbar input{flex:1;background:none;border:none;outline:none;color:var(--txt);font-size:13.5px}
+.searchbar input::placeholder{color:var(--faint)}
+.icobtn{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;
+  background:rgba(20,30,70,.7);color:var(--cyan);transition:.2s;flex:none}
+.icobtn:hover{box-shadow:var(--glow-c);border-color:var(--cyan)}
+.icobtn svg{width:17px;height:17px}
+.icobtn.go{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#06122e;border:none}
+.ownerchip{display:flex;align-items:center;gap:10px;padding:5px 12px 5px 6px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(14,22,58,.8)}
+.ownerchip .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;
+  background:linear-gradient(135deg,var(--purple),var(--pink));box-shadow:var(--glow-p)}
+.ownerchip b{font-size:13px;display:block;line-height:1.1}.ownerchip span{font-size:10.5px;color:var(--dim)}
+
+/* ---------- sidebar ---------- */
+#sidebar{grid-area:side;border-right:1px solid var(--line);padding:12px 10px;display:flex;flex-direction:column;gap:2px;
+  background:linear-gradient(180deg,rgba(8,13,38,.92),rgba(6,9,28,.95));overflow-y:auto}
+.navitem{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:11px;color:var(--dim);
+  border:1px solid transparent;background:none;width:100%;text-align:left;font-size:13.5px;transition:.18s}
+.navitem svg{width:18px;height:18px;flex:none}
+.navitem:hover{color:var(--txt);background:rgba(40,60,140,.25)}
+.navitem.active{color:#06122e;font-weight:700;background:linear-gradient(90deg,var(--cyan),#7cc7ff);
+  box-shadow:var(--glow-c)}
+#presenceCard{margin-top:auto;border:1px solid var(--line2);border-radius:12px;padding:10px 12px;
+  background:rgba(16,24,64,.7);display:flex;gap:10px;align-items:center;cursor:pointer}
+#presenceCard .dot{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none;
+  background:radial-gradient(circle at 35% 30%,rgba(56,225,255,.5),rgba(20,40,120,.9));
+  border:1px solid var(--cyan);box-shadow:var(--glow-c)}
+#presenceCard b{font-size:11.5px;color:var(--cyan);letter-spacing:.6px;display:block}
+#presenceCard span{font-size:10.5px;color:var(--dim)}
+#presenceCard .pulse{width:8px;height:8px;border-radius:50%;background:var(--ok);margin-left:auto;
+  box-shadow:0 0 8px var(--ok);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.35}}
+
+/* ---------- main ---------- */
+#main{grid-area:main;overflow-y:auto;padding:12px 14px 18px;display:flex;flex-direction:column;gap:12px}
+#main>#welcome,#main>#dashgrid,#main>#counters,#main>#sysrow{flex:none}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:inset 0 0 24px rgba(40,80,200,.08),0 4px 18px rgba(0,0,10,.4);position:relative}
+.panel::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 0 1px 0 rgba(140,200,255,.18)}
+.ptitle{display:flex;align-items:center;gap:8px;padding:11px 14px 8px;font-weight:700;font-size:13.5px;
+  letter-spacing:.4px}
+.ptitle .plus{margin-left:auto}
+.plus{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:rgba(30,45,100,.6);
+  color:var(--cyan);font-size:15px;line-height:1;display:grid;place-items:center}
+.plus:hover{box-shadow:var(--glow-c)}
+
+/* ---------- welcome banner ---------- */
+#welcome{display:flex;align-items:center;gap:14px;padding:12px 18px;overflow:hidden}
+#welcome .crys{width:40px;height:40px;flex:none;filter:drop-shadow(0 0 10px rgba(176,107,255,.9))}
+#welcome h2{font-size:21px;font-weight:800;letter-spacing:.3px}
+#welcome h2 .crown{color:var(--warn)}
+#welcome p{font-size:12px;color:var(--dim);margin-top:2px}
+#welcome .script{margin-left:auto;text-align:right;font-style:italic;color:#cfe0ff;line-height:1.5;
+  font-family:Georgia,"Times New Roman",serif;font-size:14px;text-shadow:0 0 12px rgba(176,107,255,.6)}
+#mountains{position:absolute;right:120px;top:-6px;width:300px;opacity:.5;pointer-events:none}
+
+/* ---------- main grid ---------- */
+#dashgrid{display:grid;grid-template-columns:250px minmax(0,1fr) 288px;gap:12px;align-items:start}
+
+/* quick actions */
+.qalist{list-style:none;padding:2px 10px 12px;display:flex;flex-direction:column;gap:7px}
+.qalist button{width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;
+  background:rgba(24,34,80,.65);border:1px solid rgba(90,140,255,.22);color:var(--txt);font-size:12.8px;transition:.18s}
+.qalist button svg{width:16px;height:16px;color:var(--cyan);flex:none}
+.qalist button .chev{margin-left:auto;color:var(--faint)}
+.qalist button:hover{border-color:var(--cyan);box-shadow:var(--glow-c);transform:translateX(2px)}
+
+/* engines */
+.engcard{margin:4px 12px 12px;padding:11px 13px;border-radius:12px;border:1px solid var(--line2);cursor:pointer;
+  background:linear-gradient(135deg,rgba(30,50,120,.75),rgba(50,25,110,.6));display:flex;align-items:center;gap:11px;transition:.2s}
+.engcard:hover{box-shadow:var(--glow-p);transform:translateY(-1px)}
+.engcard .eic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;flex:none;
+  background:rgba(56,225,255,.12);border:1px solid var(--line)}
+.engcard .eic svg{width:20px;height:20px;color:var(--cyan)}
+.engcard b{font-size:12.5px;display:block}.engcard span{font-size:11px;color:var(--dim)}
+.engcard .go{margin-left:auto;color:var(--cyan);font-size:18px}
+.engcard.qv{background:linear-gradient(135deg,rgba(70,25,120,.8),rgba(120,30,140,.55))}
+.engcard.qv .eic svg{color:var(--pink)}
+
+/* ---------- center / sun portrait ---------- */
+#centerCol{display:flex;flex-direction:column;gap:12px;min-width:0}
+#sunWrap{position:relative;display:flex;flex-direction:column;align-items:center;padding:18px 8px 8px}
+#sunStage{position:relative;width:430px;height:400px;flex:none}
+#sunCore{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:196px;height:196px;z-index:3}
+#sunCore .ring{position:absolute;inset:0;border-radius:50%;
+  border:3px solid transparent;
+  background:linear-gradient(#0a1236,#0a1236) padding-box,
+             linear-gradient(135deg,var(--cyan),var(--blue) 40%,var(--purple) 70%,var(--pink)) border-box;
+  box-shadow:0 0 26px rgba(56,225,255,.5),0 0 70px rgba(150,90,255,.30),inset 0 0 30px rgba(40,80,220,.35)}
+#sunCore .face{position:absolute;inset:10px;border-radius:50%;overflow:hidden;
+  background:radial-gradient(circle at 50% 30%,#27408f 0%,#131c52 45%,#070c28 100%)}
+#sunCore .caeliaPortrait{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.08) contrast(1.04);transform:scale(1.06)}
+#sunCore svg.fig{position:absolute;inset:0;width:100%;height:100%}
+#sunCore.away .fig{filter:grayscale(.7) brightness(.6)}
+#sunCore .breathe{animation:breathe 4.5s ease-in-out infinite;transform-origin:center}
+@keyframes breathe{50%{transform:scale(1.045)}}
+.orbit{position:absolute;left:50%;top:46%;width:0;height:0;z-index:2}
+.orb{position:absolute;transform:translate(-50%,-50%);width:66px;height:66px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,rgba(30,50,120,.95),rgba(10,16,44,.95));
+  border:2px solid rgba(56,225,255,.65);box-shadow:var(--glow-c),inset 0 0 14px rgba(56,225,255,.18);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--txt);
+  transition:.2s}
+.orb svg{width:20px;height:20px;color:var(--cyan);filter:drop-shadow(0 0 4px rgba(56,225,255,.8))}
+.orb span{font-size:9px;font-weight:700;letter-spacing:.4px;color:#cfe4ff}
+.orb:hover{transform:translate(-50%,-50%) scale(1.12);border-color:var(--pink);box-shadow:0 0 14px rgba(255,107,216,.7)}
+.orb .pct{font-size:8px;color:var(--pink);font-weight:700}
+.ray{position:absolute;left:50%;top:46%;height:2px;transform-origin:0 50%;z-index:1;
+  background:linear-gradient(90deg,rgba(56,225,255,.75),rgba(176,107,255,.25));box-shadow:0 0 6px rgba(56,225,255,.5)}
+#sunName{margin-top:6px;text-align:center;z-index:3}
+#sunName h3{font-size:24px;letter-spacing:7px;font-weight:800;
+  background:linear-gradient(90deg,#fff,var(--cyan),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+#sunName p{font-size:9.5px;letter-spacing:3.4px;color:var(--dim);margin-top:3px}
+/* peacock crystal */
+#crystalBtn{background:none;border:none;padding:2px;cursor:pointer;z-index:4;transition:.25s}
+#crystalBtn:hover{transform:scale(1.14) rotate(2deg)}
+#crystalBtn svg{width:74px;height:62px;filter:drop-shadow(0 0 14px rgba(56,225,255,.85))}
+#crystalHint{font-size:10px;color:var(--faint);letter-spacing:1.5px;margin-top:1px}
+/* caelia function buttons (from original dashboard) */
+#caeliaBtns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:4px 6px 12px}
+.cbtn{padding:8px 14px;border-radius:999px;font-size:12px;font-weight:700;color:#06122e;border:none;
+  background:linear-gradient(135deg,var(--cyan),#8fd0ff);box-shadow:var(--glow-c);transition:.18s}
+.cbtn.alt{background:linear-gradient(135deg,var(--purple),var(--pink));color:#14041f;box-shadow:var(--glow-p)}
+.cbtn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.cbtn.on{outline:2px solid #fff}
+/* neural link feed */
+#neural{padding-bottom:12px}
+.nlrow{display:flex;align-items:center;gap:10px;margin:7px 14px;padding:8px 12px;border-radius:10px;
+  background:rgba(16,26,66,.6);border:1px solid rgba(90,140,255,.18);font-size:12px}
+.nlrow .tag{font-size:9.5px;font-weight:800;letter-spacing:1px;padding:3px 9px;border-radius:999px;flex:none}
+.tag.sens{background:rgba(56,225,255,.16);color:var(--cyan);border:1px solid var(--cyan)}
+.tag.act{background:rgba(176,107,255,.16);color:var(--purple);border:1px solid var(--purple)}
+.tag.mem{background:rgba(255,107,216,.14);color:var(--pink);border:1px solid var(--pink)}
+.nlrow .blip{width:8px;height:8px;border-radius:50%;margin-left:auto;flex:none;animation:blink 1.8s infinite}
+.nlrow small{color:var(--faint);margin-left:6px}
+
+/* ---------- right column ---------- */
+#rightCol{display:flex;flex-direction:column;gap:12px}
+.actrow{display:flex;align-items:center;gap:10px;padding:8px 14px;font-size:12.3px;border-bottom:1px solid rgba(80,140,255,.12)}
+.actrow:last-child{border-bottom:none}
+.actrow .ai{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:none;font-size:13px}
+.actrow time{margin-left:auto;font-size:10.5px;color:var(--faint);flex:none}
+.viewall{font-size:11.5px;color:var(--cyan);background:none;border:none}
+.pinrow{display:flex;align-items:center;gap:10px;padding:8px 14px;font-size:12.5px;cursor:pointer;border-radius:8px}
+.pinrow:hover{background:rgba(40,60,140,.25)}
+.pinrow .fold{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;flex:none;font-size:13px}
+.pinrow .cnt{margin-left:auto;color:var(--faint);font-size:11px}
+.pinrow .dots{color:var(--faint);background:none;border:none;font-size:14px;letter-spacing:2px}
+
+/* ---------- bottom counters ---------- */
+#counters{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.count{padding:13px 14px;display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:.2s;overflow:hidden}
+.count:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:var(--glow-c)}
+.count .ch{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:#dce6ff}
+.count .ch svg{width:17px;height:17px;color:var(--cyan)}
+.count .big{font-size:23px;font-weight:800;display:flex;align-items:center;gap:8px}
+.count .big .arr{margin-left:auto;color:var(--cyan);font-size:16px}
+.count small{color:var(--dim);font-size:10.5px}
+.count.c1{background:linear-gradient(135deg,rgba(20,60,120,.85),rgba(15,35,90,.7))}
+.count.c2{background:linear-gradient(135deg,rgba(70,25,120,.85),rgba(45,20,90,.7))}
+.count.c3{background:linear-gradient(135deg,rgba(15,50,110,.85),rgba(20,30,80,.7))}
+.count.c4{background:linear-gradient(135deg,rgba(15,70,95,.85),rgba(15,40,80,.7))}
+.count.c5{background:linear-gradient(135deg,rgba(80,30,130,.85),rgba(50,20,95,.7))}
+.count.c6{background:linear-gradient(135deg,rgba(20,80,110,.85),rgba(25,45,95,.7))}
+
+/* ---------- system + storage ---------- */
+#sysrow{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
+.sysgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 14px 14px}
+.sysbox{background:rgba(12,20,52,.7);border:1px solid rgba(90,140,255,.16);border-radius:12px;padding:10px 12px}
+.sysbox small{color:var(--dim);font-size:10.5px;display:block}
+.sysbox .v{font-size:21px;font-weight:800;margin:3px 0}
+.sysbox .d{font-size:10.5px;color:var(--ok)}
+.sysbox svg.spark{width:100%;height:30px;margin-top:4px}
+#storageBarWrap{padding:4px 16px 8px}
+#storageTrack{height:14px;border-radius:999px;background:rgba(10,18,50,.9);border:1px solid var(--line);overflow:hidden}
+#storageFill{height:100%;width:68%;border-radius:999px;
+  background:linear-gradient(90deg,var(--cyan),var(--blue),var(--purple));box-shadow:0 0 14px rgba(56,225,255,.7)}
+#storageMeta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);padding:8px 16px 13px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;padding:0 16px 14px;font-size:10.5px;color:var(--dim)}
+.legend i{width:9px;height:9px;border-radius:3px;display:inline-block;margin-right:5px}
+
+/* ---------- module drawer ---------- */
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,94vw);z-index:60;transform:translateX(105%);
+  transition:transform .32s cubic-bezier(.2,.8,.25,1);display:flex;flex-direction:column;
+  background:linear-gradient(180deg,rgba(10,16,44,.98),rgba(6,9,28,.99));
+  border-left:1px solid var(--line2);box-shadow:-30px 0 60px rgba(0,0,20,.6)}
+#drawer.open{transform:none}
+#drawerHead{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line)}
+#drawerHead h2{font-size:17px;letter-spacing:.5px}
+#drawerHead .x{margin-left:auto}
+#drawerBody{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.x{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:rgba(30,45,100,.6);color:var(--txt);font-size:15px}
+.x:hover{border-color:var(--pink);box-shadow:0 0 10px rgba(255,107,216,.5)}
+.card{background:rgba(16,24,64,.65);border:1px solid rgba(90,140,255,.2);border-radius:12px;padding:12px 14px}
+.card h4{font-size:13px;margin-bottom:8px;color:#dce6ff}
+.rowflex{display:flex;gap:8px;align-items:center}
+.tinput,textarea.tinput,select.tinput{width:100%;background:rgba(8,14,40,.9);border:1px solid var(--line);
+  border-radius:10px;color:var(--txt);padding:9px 12px;font-size:13px;outline:none}
+.tinput:focus{border-color:var(--cyan);box-shadow:var(--glow-c)}
+.btn{padding:9px 16px;border-radius:10px;border:none;font-weight:700;font-size:13px;color:#06122e;
+  background:linear-gradient(135deg,var(--cyan),#8fd0ff);box-shadow:var(--glow-c);transition:.18s}
+.btn:hover{filter:brightness(1.12)}
+.btn.ghost{background:rgba(30,45,100,.6);color:var(--txt);border:1px solid var(--line);box-shadow:none}
+.btn.pink{background:linear-gradient(135deg,var(--purple),var(--pink));color:#160420;box-shadow:var(--glow-p)}
+.btn.danger{background:linear-gradient(135deg,#ff6b8a,#ff9a5c);color:#2a0a12;box-shadow:none}
+.btn.sm{padding:6px 11px;font-size:11.5px}
+.listitem{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:8px;
+  background:rgba(20,30,74,.6);border:1px solid rgba(90,140,255,.16)}
+.listitem.done{opacity:.55}.listitem.done .lt{text-decoration:line-through}
+.listitem .lt{flex:1;font-size:13px}.listitem .ls{font-size:10px;color:var(--dim)}
+.pill{font-size:9.5px;font-weight:800;letter-spacing:.8px;padding:3px 10px;border-radius:999px;flex:none}
+.pill.prog{background:rgba(255,207,92,.15);color:var(--warn);border:1px solid var(--warn)}
+.pill.done{background:rgba(52,224,161,.14);color:var(--ok);border:1px solid var(--ok)}
+.pill.info{background:rgba(56,225,255,.13);color:var(--cyan);border:1px solid var(--cyan)}
+.tgl{width:40px;height:22px;border-radius:999px;border:1px solid var(--line);background:rgba(10,18,50,.9);position:relative;flex:none}
+.tgl::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--faint);transition:.2s}
+.tgl.on{border-color:var(--cyan);box-shadow:var(--glow-c)}
+.tgl.on::after{left:20px;background:var(--cyan)}
+.msg{max-width:88%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;margin-bottom:10px}
+.msg.u{align-self:flex-end;background:linear-gradient(135deg,rgba(56,225,255,.25),rgba(91,140,255,.2));border:1px solid var(--line)}
+.msg.c{align-self:flex-start;background:rgba(24,34,84,.8);border:1px solid var(--line2)}
+.msg.sys{align-self:center;background:rgba(255,207,92,.08);border:1px dashed var(--warn);color:var(--warn);font-size:12px;text-align:center}
+#chatBox{display:flex;flex-direction:column;flex:1;min-height:300px}
+#chatLog{flex:1;overflow-y:auto;display:flex;flex-direction:column;padding:6px 2px;max-height:46vh}
+.ph{border:1.5px dashed rgba(120,160,255,.35);border-radius:12px;padding:22px 14px;text-align:center;color:var(--dim);
+  font-size:12.5px;cursor:pointer;transition:.2s;background:rgba(14,22,60,.4)}
+.ph:hover{border-color:var(--cyan);color:var(--txt);box-shadow:var(--glow-c)}
+.ph b{display:block;color:var(--cyan);margin-bottom:4px;font-size:13px}
+.kv{display:flex;justify-content:space-between;font-size:12.5px;padding:7px 2px;border-bottom:1px solid rgba(80,140,255,.1)}
+.kv b{color:var(--cyan)}
+
+/* ---------- hidden admin ---------- */
+#admin{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;
+  background:rgba(2,4,16,.82);backdrop-filter:blur(6px)}
+#admin.open{display:flex}
+#adminBox{width:min(860px,95vw);max-height:92vh;overflow-y:auto;border-radius:20px;padding:2px;
+  background:linear-gradient(135deg,var(--pink),var(--purple) 40%,var(--cyan));
+  box-shadow:0 0 60px rgba(255,107,216,.35)}
+#adminIn{border-radius:18px;background:linear-gradient(180deg,#0a0f30,#05081e);padding:20px 22px}
+#adminIn h2{font-size:19px;letter-spacing:1px;
+  background:linear-gradient(90deg,var(--pink),var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+#adminIn .sub{font-size:11.5px;color:var(--dim);margin:4px 0 14px}
+.admingrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.acard{background:rgba(18,26,70,.75);border:1px solid var(--line2);border-radius:14px;padding:13px 15px}
+.acard h4{font-size:13px;margin-bottom:9px;display:flex;align-items:center;gap:8px}
+.acard h4 .lk{font-size:16px}
+.acard p.note{font-size:11px;color:var(--faint);margin-top:8px;line-height:1.5}
+#miniSun{display:flex;align-items:center;gap:14px}
+#miniFace{width:84px;height:84px;border-radius:50%;flex:none;position:relative;
+  background:radial-gradient(circle at 40% 30%,#2c448f,#0d153f 60%,#05081e);
+  border:3px solid transparent;background-clip:padding-box;
+  box-shadow:0 0 18px rgba(56,225,255,.6),0 0 44px rgba(176,107,255,.3)}
+#miniFace::before{content:"";position:absolute;inset:-3px;border-radius:50%;z-index:-1;
+  background:linear-gradient(135deg,var(--cyan),var(--purple),var(--pink))}
+.teachctl{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.teachctl button{font-size:11px;padding:7px 11px;border-radius:999px;border:1px solid var(--line);
+  background:rgba(30,45,100,.6);color:var(--txt)}
+.teachctl button:hover{border-color:var(--pink);box-shadow:0 0 10px rgba(255,107,216,.5)}
+.secretbox{font-family:ui-monospace,Consolas,monospace;font-size:12px;background:rgba(5,8,26,.9);
+  border:1px solid var(--line2);border-radius:10px;padding:10px 12px;color:#cfe0ff;min-height:64px;white-space:pre-wrap}
+
+/* ---------- modal / toast ---------- */
+#modal{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;
+  background:rgba(2,4,16,.7);backdrop-filter:blur(4px)}
+#modal.open{display:flex}
+#modalBox{width:min(480px,92vw);border-radius:18px;padding:2px;
+  background:linear-gradient(135deg,var(--cyan),var(--purple))}
+#modalIn{border-radius:16px;background:#0a0f30;padding:20px}
+#modalIn h3{margin-bottom:12px;font-size:16px}
+#modalIn .fld{margin-bottom:11px}#modalIn label{font-size:11.5px;color:var(--dim);display:block;margin-bottom:5px}
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);z-index:120;
+  background:rgba(12,20,54,.97);border:1px solid var(--cyan);border-radius:12px;padding:11px 20px;font-size:13px;
+  box-shadow:var(--glow-c);transition:transform .3s;max-width:88vw;text-align:center}
+#toast.show{transform:translateX(-50%)}
+.backendTag{font-size:9px;font-weight:800;letter-spacing:1px;color:var(--warn);border:1px solid var(--warn);
+  border-radius:6px;padding:2px 7px;margin-left:8px;vertical-align:middle}
+@media(max-width:1180px){#dashgrid{grid-template-columns:220px 1fr}#rightCol{display:none}#counters{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:860px){#app{grid-template-columns:64px 1fr}#sidebar .navitem span{display:none}#dashgrid{grid-template-columns:1fr}.admingrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="frame"><div id="app">
+
+<!-- ================= HEADER ================= -->
+<header>
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 48 48" fill="none">
+      <path d="M24 4 L42 38 H6 Z" stroke="#38e1ff" stroke-width="2.5" fill="rgba(56,225,255,.08)"/>
+      <path d="M24 12 L34 32 H14 Z" stroke="#b06bff" stroke-width="2" fill="rgba(176,107,255,.12)"/>
+      <path d="M24 12 V32 M14 32 L24 22 L34 32" stroke="#ff6bd8" stroke-width="1.6"/>
+      <circle cx="24" cy="22" r="3" fill="#38e1ff"/>
+    </svg>
+    <div><h1>CAELIA SYSTEMS</h1><small>ONE BRAIN • ALL SYSTEMS • ONE MOTHERBOARD</small></div>
+  </div>
+  <div class="searchbar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5f6b9e" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input id="askInput" placeholder="Ask Caelia anything...">
+    <button class="icobtn" id="micBtn" title="Voice input">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+    </button>
+    <button class="icobtn go" id="askGo" title="Ask Caelia">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    </button>
+  </div>
+  <button class="icobtn" id="bellBtn" title="Notifications">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M10.3 21a2 2 0 0 0 3.4 0"/></svg>
+  </button>
+  <button class="icobtn" id="speakToggle" title="Caelia voice output">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5zM15.5 8.5a5 5 0 0 1 0 7"/></svg>
+  </button>
+  <div class="ownerchip"><div class="av">A</div><div><b>Alicia</b><span>Owner</span></div></div>
+</header>
+
+<!-- ================= SIDEBAR ================= -->
+<aside id="sidebar">
+  <button class="navitem active" data-view="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5M5 9.5V21h14V9.5"/></svg><span>Dashboard</span></button>
+  <button class="navitem" data-view="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg><span>Chat</span></button>
+  <button class="navitem" data-view="tasks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5.5"/></svg><span>Tasks</span></button>
+  <button class="navitem" data-view="apps"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Apps</span></button>
+  <button class="navitem" data-view="agents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="8" width="14" height="11" rx="3"/><circle cx="9.5" cy="13" r="1.2" fill="currentColor"/><circle cx="14.5" cy="13" r="1.2" fill="currentColor"/><path d="M12 8V4M8 4h8"/></svg><span>Agents</span></button>
+  <button class="navitem" data-view="skills"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.7 5.8 6.3.7-4.7 4.3 1.3 6.2-5.6-3.2L6.4 20l1.3-6.2L3 9.5l6.3-.7z"/></svg><span>Skills</span></button>
+  <button class="navitem" data-view="plugins"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5"/></svg><span>Plugins</span></button>
+  <button class="navitem" data-view="files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span>Files</span></button>
+  <button class="navitem" data-view="notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg><span>Notes</span></button>
+  <button class="navitem" data-view="memory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4a3 3 0 0 1 3 3c2.5 0 4 2 4 4.5S17 20 12 20s-7-3.5-7-8.5S7 7 9.5 7A3 3 0 0 1 12 4z"/><path d="M12 4v16"/></svg><span>Memory</span></button>
+  <button class="navitem" data-view="automations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/></svg><span>Automations</span></button>
+  <button class="navitem" data-view="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Analytics</span></button>
+  <button class="navitem" data-view="engines"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9z"/><path d="M12 11L4 6.5M12 11l8-4.5M12 11v9"/></svg><span>Engines</span></button>
+  <button class="navitem" data-view="marketplace"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12zM6 6L5 3H2"/><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg><span>Marketplace</span></button>
+  <button class="navitem" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg><span>Settings</span></button>
+  <div id="presenceCard" title="Caelia presence">
+    <div class="dot"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38e1ff" stroke-width="2"><path d="M12 4a3 3 0 0 1 3 3c2.5 0 4 2 4 4.5S17 20 12 20s-7-3.5-7-8.5S7 7 9.5 7A3 3 0 0 1 12 4z"/></svg></div>
+    <div><b id="presenceLabel">CAELIA ONLINE</b><span>Ready to assist</span></div>
+    <div class="pulse"></div>
+  </div>
+</aside>
+
+<!-- ================= MAIN ================= -->
+<div id="main">
+  <section class="panel" id="welcome">
+    <svg class="crys" viewBox="0 0 48 48" fill="none">
+      <path d="M24 4 L42 38 H6 Z" stroke="#b06bff" stroke-width="2.5" fill="rgba(176,107,255,.1)"/>
+      <path d="M24 4 V38 M6 38 L24 20 L42 38 M14 24 L24 20 L34 24" stroke="#38e1ff" stroke-width="1.6"/>
+    </svg>
+    <div><h2>Welcome Back, Alicia <span class="crown">👑</span></h2><p>Your Motherboard — All Systems Connected</p></div>
+    <div class="script">Create · Build · Grow<br>One Brain. All Possibilities.</div>
+  </section>
+
+  <div id="dashgrid">
+    <!-- LEFT: quick actions + engines -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <section class="panel">
+        <div class="ptitle">⚡ Quick Actions <button class="plus" data-act="quickadd" title="Add action">+</button></div>
+        <ul class="qalist">
+          <li><button data-act="newchat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg>New Chat<span class="chev">›</span></button></li>
+          <li><button data-act="newtask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5.5"/></svg>Create a Task<span class="chev">›</span></button></li>
+          <li><button data-act="upload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></svg>Upload a File<span class="chev">›</span></button></li>
+          <li><button data-act="newnote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Create a Note<span class="chev">›</span></button></li>
+          <li><button data-act="runeval"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Run Evaluation<span class="chev">›</span></button></li>
+          <li><button data-act="buildapp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Build an App<span class="chev">›</span></button></li>
+          <li><button data-act="newauto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>Start Automation<span class="chev">›</span></button></li>
+        </ul>
+      </section>
+      <section class="panel">
+        <div class="ptitle">🧊 Active Engines</div>
+        <div class="engcard" data-view="engines" data-eng="personal">
+          <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/></svg></div>
+          <div><b>Personal / Commercial Engine</b><span>Personal Evaluation</span></div><span class="go">›</span>
+        </div>
+        <div class="engcard qv" data-view="engines" data-eng="qvpro">
+          <div class="eic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7"/></svg></div>
+          <div><b>QV Pro Engine</b><span>Commercial Evaluation</span></div><span class="go">›</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- CENTER: sun portrait -->
+    <div id="centerCol">
+      <section class="panel" id="sunWrap">
+        <div id="sunStage">
+          <div id="sunCore">
+            <div class="ring"></div>
+            <div class="face"><img class="caeliaPortrait" src="assets/caelia.png" alt="Caelia AI presence"></div>
+          </div>
+        </div>
+        <div id="sunName"><h3>CAELIA</h3><p>AI INTELLIGENCE · ORCHESTRATION LAYER</p></div>
+        <button id="crystalBtn" title="Hidden admin">
+          <svg viewBox="0 0 74 62" fill="none">
+            <path d="M37 3 L70 55 H4 Z" stroke="#38e1ff" stroke-width="2.5" fill="rgba(56,225,255,.07)"/>
+            <path d="M37 3 V55 M4 55 L37 26 L70 55 M18 40 L37 26 L56 40" stroke="#b06bff" stroke-width="1.8"/>
+            <path d="M37 3 C 33 14, 31 20, 37 26 C 43 20, 41 14, 37 3" stroke="#ff6bd8" stroke-width="1.6" fill="rgba(255,107,216,.18)"/>
+            <circle cx="37" cy="26" r="3.4" fill="#38e1ff"/>
+          </svg>
+        </button>
+        <div id="crystalHint">△ HIDDEN ADMIN</div>
+        <div id="caeliaBtns">
+          <button class="cbtn" data-cfn="ask">Ask Caelia</button>
+          <button class="cbtn" data-cfn="savemem">Save Memory</button>
+          <button class="cbtn" data-cfn="newtask">New Task</button>
+          <button class="cbtn alt" data-cfn="presence">Caelia Presence</button>
+          <button class="cbtn alt" data-cfn="represent">Represent Alicia</button>
+          <button class="cbtn alt" data-cfn="private">Private Caelia</button>
+        </div>
+      </section>
+      <section class="panel" id="neural">
+        <div class="ptitle">🔗 Neural Link Activity <span class="backendTag">BRIDGE FEED</span></div>
+        <div id="neuralFeed"></div>
+      </section>
+    </div>
+
+    <!-- RIGHT -->
+    <div id="rightCol">
+      <section class="panel">
+        <div class="ptitle">🕐 Recent Activity <button class="viewall" data-view="analytics" style="margin-left:auto">View All</button></div>
+        <div id="activityFeed"></div>
+      </section>
+      <section class="panel">
+        <div class="ptitle">📌 Pinned Notes <button class="plus" data-act="newnote" title="Add note">+</button></div>
+        <div id="pinList" style="padding:2px 8px 12px"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- BOTTOM -->
+  <section id="counters"></section>
+  <div id="sysrow">
+    <section class="panel">
+      <div class="ptitle">📈 System Overview <span style="margin-left:auto;font-size:11px;color:var(--dim);font-weight:400">Last 7 Days ▾</span></div>
+      <div class="sysgrid" id="sysGrid"></div>
+    </section>
+    <section class="panel">
+      <div class="ptitle">🗄️ Storage Container</div>
+      <div id="storageBarWrap"><div id="storageTrack"><div id="storageFill"></div></div></div>
+      <div id="storageMeta"><span></span><span><b style="color:var(--txt)">68% Used</b><br>420 GB / 1 TB</span></div>
+      <div class="legend">
+        <span><i style="background:#38e1ff"></i>Files</span><span><i style="background:#b06bff"></i>Memory</span>
+        <span><i style="background:#ffcf5c"></i>Notes</span><span><i style="background:#8b7cf0"></i>Apps / Config</span>
+        <span><i style="background:#5b8cff"></i>Backups</span>
+      </div>
+    </section>
+  </div>
+</div><!-- /main -->
+
+<!-- ================= MODULE DRAWER ================= -->
+<div id="drawer">
+  <div id="drawerHead"><h2 id="drawerTitle">Panel</h2><button class="x" id="drawerClose">✕</button></div>
+  <div id="drawerBody"></div>
+</div>
+
+<!-- ================= HIDDEN ADMIN ================= -->
+<div id="admin">
+  <div id="adminBox"><div id="adminIn">
+    <div class="rowflex"><h2>△ HIDDEN ADMIN — CAELIA CORE</h2><button class="x" id="adminClose" style="margin-left:auto">✕</button></div>
+    <p class="sub">Restricted — Alicia only. Nothing here is visible in normal navigation. <span class="backendTag">CORE INTERFACE</span></p>
+    <div class="acard" style="margin-bottom:12px">
+      <h4>🔐 Motherboard ↔ Caelia Brain</h4>
+      <div class="rowflex"><input class="tinput" id="brainToken" type="password" placeholder="Owner token (session only)"><button class="btn sm" id="brainConnect">Connect</button></div>
+      <p class="note" id="brainStatus">Checking https://backend.caeliasystems.com …</p>
+    </div>
+    <div class="admingrid">
+      <div class="acard">
+        <h4><span class="lk">🌟</span> Caelia — Teaching Controls</h4>
+        <div id="miniSun"><div id="miniFace"></div>
+          <div style="font-size:11.5px;color:var(--dim)">Directives queue to her core.<br>Only Alicia's words teach her.</div>
+        </div>
+        <div class="teachctl" id="teachCtls">
+          <button data-t="get builder build">get builder build</button>
+          <button data-t="shop this">shop this</button>
+          <button data-t="get directives">get directives</button>
+          <button data-t="review learning">review learning</button>
+          <button data-t="+ custom directive">+ custom directive</button>
+        </div>
+        <div class="rowflex" style="margin-top:10px">
+          <input class="tinput" id="teachInput" placeholder="Type a directive for Caelia...">
+          <button class="btn sm pink" id="teachSend">Teach</button>
+        </div>
+        <div id="teachQueue" style="margin-top:8px;font-size:12px"></div>
+        <p class="note">Learning metrics (local demo — live values arrive when the Brain backend connects):</p>
+        <div id="learnMetrics" style="margin-top:6px"></div>
+      </div>
+      <div class="acard">
+        <h4><span class="lk">🔐</span> Tom's Secret Box</h4>
+        <div class="secretbox" id="tomBox">— sealed · Alicia only —</div>
+        <div class="rowflex" style="margin-top:8px">
+          <input class="tinput" id="tomInput" placeholder="Add to Tom's box...">
+          <button class="btn sm" id="tomAdd">Seal</button>
+        </div>
+        <p class="note">Sealed entries are stored locally on this device only.</p>
+      </div>
+      <div class="acard">
+        <h4><span class="lk">🗝️</span> Token Safe</h4>
+        <div id="tokenList" style="font-size:12px"></div>
+        <div class="rowflex" style="margin-top:8px">
+          <input class="tinput" id="tokenName" placeholder="Token name (e.g. Stripe)">
+          <button class="btn sm" id="tokenAdd">Store</button>
+        </div>
+        <p class="note">Names only. Values are never stored here — Alicia enters them at the service itself.</p>
+      </div>
+      <div class="acard">
+        <h4><span class="lk">📁</span> Safe Folder</h4>
+        <div id="safeFiles" style="font-size:12px"></div>
+        <button class="btn sm ghost" id="safeUpload" style="margin-top:8px">+ Protect a file</button>
+      </div>
+      <div class="acard">
+        <h4><span class="lk">💜</span> Soul Button — Ethics &amp; Morality</h4>
+        <p style="font-size:12px;color:var(--dim);line-height:1.6">Caelia learns right from wrong only through Alicia's lessons. No outside party dictates belief — never ideology, never confusion.</p>
+        <div class="secretbox" style="margin-top:8px">Acceptance &amp; Discernment:
+1. What can I change? → act.
+2. What can I not change? → accept reality.
+3. What can I influence? → act, accept uncertainty.
+4. Wisdom to tell the difference? → pause and examine.
+Acceptance is never surrender, weakness, or approval of what is wrong.</div>
+        <div class="rowflex" style="margin-top:8px">
+          <input class="tinput" id="soulInput" placeholder="Add a soul lesson...">
+          <button class="btn sm pink" id="soulAdd">Teach</button>
+        </div>
+      </div>
+      <div class="acard">
+        <h4><span class="lk">🚨</span> Crisis Failsafe Prompt Channel</h4>
+        <p style="font-size:12px;color:var(--dim)">Direct line to her core — works even in a glitch.</p>
+        <div class="rowflex" style="margin-top:8px">
+          <input class="tinput" id="failsafeInput" placeholder="Failsafe prompt...">
+          <button class="btn sm danger" id="failsafeSend">Send</button>
+        </div>
+        <div id="failsafeLog" style="margin-top:8px;font-size:12px"></div>
+      </div>
+      <div class="acard">
+        <h4><span class="lk">⚖️</span> Command Override</h4>
+        <p style="font-size:12px;color:var(--dim)">Cancel or replace a bad public command.</p>
+        <div id="overrideList" style="margin-top:8px;font-size:12px"></div>
+      </div>
+      <div class="acard">
+        <h4><span class="lk">🎭</span> Role &amp; Representation</h4>
+        <select class="tinput" id="roleSelect">
+          <option>Caelia as herself</option>
+          <option>Representing Alicia — business</option>
+          <option>Representing Alicia — personal</option>
+          <option>Silent observer</option>
+        </select>
+        <p class="note">Sets when, what, and how Caelia represents Alicia.</p>
+      </div>
+      <div class="acard">
+        <h4><span class="lk">💰</span> Money Matters</h4>
+        <div class="rowflex" style="margin-bottom:8px">
+          <button class="btn sm ghost" data-mtab="bills" style="flex:1">Bills</button>
+          <button class="btn sm ghost" data-mtab="revenue" style="flex:1">Revenue</button>
+        </div>
+        <div id="moneyList" style="font-size:12px"></div>
+        <div class="rowflex" style="margin-top:8px">
+          <input class="tinput" id="moneyLabel" placeholder="Label">
+          <input class="tinput" id="moneyAmt" placeholder="$" style="max-width:90px">
+          <button class="btn sm" id="moneyAdd">Add</button>
+        </div>
+      </div>
+      <div class="acard">
+        <h4><span class="lk">💬</span> Private Discussions</h4>
+        <div id="privDiscuss" style="font-size:12px;max-height:120px;overflow-y:auto"></div>
+        <div class="rowflex" style="margin-top:8px">
+          <input class="tinput" id="privInput" placeholder="Private note...">
+          <button class="btn sm" id="privSend">Save</button>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ================= MODAL / MISC ================= -->
+<div id="modal"><div id="modalBox"><div id="modalIn"></div></div></div>
+<div id="toast"></div>
+<input type="file" id="filePick" style="display:none" multiple>
+</div></div>
+<script>
+"use strict";
+/* ================================================================
+   BRAIN API — the contract between this dashboard and Caelia's
+   live backend. Everything marked TODO needs the real backend.
+   The dashboard NEVER fakes a backend response: when the backend
+   is absent, the UI says so plainly and keeps working locally.
+================================================================ */
+const BrainAPI = {
+  endpoint: "https://backend.caeliasystems.com/api",
+  connected: false,
+  token: sessionStorage.getItem("caelia_owner_token") || "",
+  async request(path, body, method="POST"){
+    const headers={"Content-Type":"application/json"};
+    if(this.token) headers.Authorization="Bearer "+this.token;
+    try{
+      const res=await fetch(this.endpoint+path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});
+      const data=await res.json().catch(()=>({}));
+      if(!res.ok) throw new Error(data.error||`HTTP ${res.status}`);
+      return {ok:true,...data};
+    }catch(e){ return {ok:false,error:"BACKEND_UNAVAILABLE",note:e.message}; }
+  },
+  async health(){ const r=await this.request("/health",undefined,"GET"); this.connected=!!r.ok; return r; },
+  async chat(message){ return this.request("/chat",{message}); },
+  async teach(directive){ return this.request("/teach",{directive,source:"alicia"}); },
+  async failsafe(prompt){ return this.request("/failsafe",{prompt}); },
+  async runEngine(engineId,params){ return this.request(`/engines/${encodeURIComponent(engineId)}/run`,params||{}); },
+  async speak(text){
+    try{ if(state.voiceOut && "speechSynthesis" in window){ speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(text)); return {ok:true}; } }catch(e){}
+    return {ok:false,error:"VOICE_UNAVAILABLE"};
+  },
+  setToken(t){ this.token=(t||"").trim(); if(this.token) sessionStorage.setItem("caelia_owner_token",this.token); else sessionStorage.removeItem("caelia_owner_token"); }
+};
+window.CaeliaBrainAPI=BrainAPI;
+</script>
+<script>
+"use strict";
+/* ================= STATE ================= */
+const LSKEY="caelia-motherboard-v1";
+const seed=()=>({
+  presence:true, voiceOut:false, role:"Caelia as herself",
+  counters:{files:248,memory:1320,apps:12,automations:6,plugins:18,skills:10},
+  sys:{tasks:48,tasksD:12,time:12.4,timeD:28,apps:12,appsD:2,auto:6,autoD:3},
+  activity:[
+    {i:"⭐",t:"Idea evaluation completed",time:"10:24 AM"},
+    {i:"📝",t:"New note saved: Tool Ideas",time:"9:41 AM"},
+    {i:"📄",t:"File uploaded: Business Plan.pdf",time:"9:12 AM"},
+    {i:"⚙️",t:"Automation updated",time:"8:50 AM"},
+    {i:"💬",t:"Chat with Caelia",time:"8:33 AM"},
+    {i:"📊",t:"Report generated (QV Pro)",time:"7:12 AM"}],
+  notes:[
+    {id:1,cat:"For You",title:"Welcome — pin anything here",body:"",ts:Date.now()},
+    {id:2,cat:"Independent Work",title:"Tool ideas",body:"",ts:Date.now()}],
+  tasks:[
+    {id:1,title:"Review Caelia motherboard rebuild",status:"in progress",ts:Date.now()},
+    {id:2,title:"15-branch architecture audit",status:"complete",ts:Date.now()}],
+  facts:[{id:1,text:"Caelia is Alicia's core AI — protected core, only Alicia teaches her.",ts:Date.now()}],
+  files:[], automations:[
+    {id:1,name:"Morning briefing",cat:"Work productivity",on:true},
+    {id:2,name:"Revenue digest",cat:"Money handling",on:false}],
+  plugins:[
+    {n:"Gmail",on:true},{n:"Google Calendar",on:true},{n:"Google Drive",on:true},
+    {n:"Google Docs",on:false},{n:"Slack",on:false},{n:"LinkedIn",on:false},{n:"Analytics",on:false}],
+  skills:[
+    {n:"Calendar Optimizer",on:true},{n:"Personal Assistant",on:true},{n:"Inbox Organizer",on:false},
+    {n:"Research Leads",on:false},{n:"Expense Logger",on:false},{n:"Financial Manager",on:false}],
+  apps:[{n:"QuantVantage AI Pro",u:"quantvantageai.com"},{n:"Art AI Studio",u:"alicias-art-ai-studio.com"}],
+  agents:[{n:"Fawn",r:"Builder agent — design"},{n:"Nova",r:"Mall host"}],
+  chat:[], teachQueue:[], money:{tab:"bills",bills:[],revenue:[]},
+  tokens:[], safeFiles:[], soul:[], privDiscuss:[], failsafe:[],
+  overrides:[], requirements:[
+    {n:"Live AI model / reasoning engine",st:"pending"},
+    {n:"Caelia Brain backend",st:"pending"},
+    {n:"Voice server attached",st:"pending"},
+    {n:"QuantVantage engine link",st:"ready"},
+    {n:"GitHub Pages site live",st:"ready"}],
+  learning:{core:8,experiential:12,ethics:5},
+  neural:[
+    {k:"sens",t:"Heartbeat received — QuantVantage AI Pro · Worth ▲",time:"just now"},
+    {k:"act",t:"Delegated: file sort → Fawn's container",time:"2m ago"},
+    {k:"mem",t:"Synced 3 domain brain files",time:"9m ago"}]
+});
+let state;
+try{ state=JSON.parse(localStorage.getItem(LSKEY))||seed(); }catch(e){ state=seed(); }
+const save=()=>{ try{localStorage.setItem(LSKEY,JSON.stringify(state));}catch(e){} };
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let _id=1000; const nid=()=>++_id+Date.now()%100000;
+function toast(msg,ms=2600){ const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),ms); }
+function logActivity(icon,text){ state.activity.unshift({i:icon,t:text,time:"now"}); state.activity=state.activity.slice(0,14); save(); renderActivity(); }
+function modal(html){ const m=$("#modal"); $("#modalIn").innerHTML=html; m.classList.add("open"); }
+function closeModal(){ $("#modal").classList.remove("open"); }
+$("#modal").addEventListener("click",e=>{ if(e.target.id==="modal") closeModal(); });
+
+/* ================= ORBS (sun rays) ================= */
+const ORBS=[
+  {v:"memory",t:"Memory",a:-90,ic:'<path d="M12 4a3 3 0 0 1 3 3c2.5 0 4 2 4 4.5S17 20 12 20s-7-3.5-7-8.5S7 7 9.5 7A3 3 0 0 1 12 4z"/>'},
+  {v:"chat",t:"Chat",a:-52,ic:'<path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/>'},
+  {v:"tasks",t:"Tasks",a:-14,ic:'<circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5.5"/>'},
+  {v:"apps",t:"Apps",a:24,ic:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'},
+  {v:"agents",t:"Agents",a:62,ic:'<rect x="5" y="8" width="14" height="11" rx="3"/><circle cx="9.5" cy="13" r="1.2" fill="currentColor"/><circle cx="14.5" cy="13" r="1.2" fill="currentColor"/>'},
+  {v:"automations",t:"Automations",a:100,ic:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>'},
+  {v:"plugins",t:"Plugins",a:138,ic:'<path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5"/>'},
+  {v:"skills",t:"Skills",a:176,ic:'<path d="M12 3l2.7 5.8 6.3.7-4.7 4.3 1.3 6.2-5.6-3.2L6.4 20l1.3-6.2L3 9.5l6.3-.7z"/>'},
+  {v:"files",t:"Files",a:214,ic:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/>'}
+];
+function buildOrbs(){
+  const stage=$("#sunStage"), R=168;
+  ORBS.forEach(o=>{
+    const rad=o.a*Math.PI/180, x=Math.cos(rad)*R, y=Math.sin(rad)*R;
+    const ray=document.createElement("div"); ray.className="ray";
+    ray.style.width=R-88+"px"; ray.style.transform=`rotate(${o.a}deg) translateX(88px)`; stage.appendChild(ray);
+    const w=document.createElement("div"); w.className="orbit";
+    w.style.transform=`translate(${x}px,${y}px)`;
+    const pct=o.v==="memory"||o.v==="skills"||o.v==="tasks"
+      ? `<span class="pct">${o.v==="memory"?state.learning.core:o.v==="skills"?state.learning.experiential:state.learning.ethics}%</span>` : "";
+    w.innerHTML=`<button class="orb" data-view="${o.v}" title="${o.t}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${o.ic}</svg><span>${o.t}</span>${pct}</button>`;
+    stage.appendChild(w);
+  });
+  stage.addEventListener("click",e=>{ const b=e.target.closest("[data-view]"); if(b) openView(b.dataset.view); });
+}
+
+/* ================= RENDER: dashboard pieces ================= */
+const ICO={
+  files:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>',
+  memory:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4a3 3 0 0 1 3 3c2.5 0 4 2 4 4.5S17 20 12 20s-7-3.5-7-8.5S7 7 9.5 7A3 3 0 0 1 12 4z"/></svg>',
+  apps:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+  automations:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',
+  plugins:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5"/></svg>',
+  skills:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.7 5.8 6.3.7-4.7 4.3 1.3 6.2-5.6-3.2L6.4 20l1.3-6.2L3 9.5l6.3-.7z"/></svg>'};
+function renderCounters(){
+  const c=state.counters, defs=[
+    ["files","Files",c.files.toLocaleString(),"Files Stored","c1"],
+    ["memory","Memory",c.memory.toLocaleString(),"Saved Facts","c2"],
+    ["apps","Apps",c.apps,"Connected Apps","c3"],
+    ["automations","Automations",c.automations,"Active Automations","c4"],
+    ["plugins","Plugins",c.plugins,"Connected Services","c5"],
+    ["skills","Skills",c.skills,"Curated Skills","c6"]];
+  $("#counters").innerHTML=defs.map(d=>`
+    <div class="panel count ${d[4]}" data-view="${d[0]}">
+      <div class="ch">${ICO[d[0]]}${d[1]}</div>
+      <div class="big">${d[2]}<span class="arr">→</span></div><small>${d[3]}</small>
+    </div>`).join("");
+  $$("#counters .count").forEach(el=>el.onclick=()=>openView(el.dataset.view));
+}
+function renderActivity(){
+  $("#activityFeed").innerHTML=state.activity.slice(0,6).map(a=>
+    `<div class="actrow"><div class="ai">${a.i}</div><span>${esc(a.t)}</span><time>${esc(a.time)}</time></div>`).join("");
+}
+const PINCATS=["For You","Independent Work","Office & Workplace","People","Personal Administration"];
+const PINEMOJI={"For You":"📁","Independent Work":"📁","Office & Workplace":"📁","People":"📁","Personal Administration":"📁"};
+function renderPins(){
+  $("#pinList").innerHTML=PINCATS.map(c=>{
+    const n=state.notes.filter(x=>x.cat===c).length;
+    return `<div class="pinrow" data-cat="${esc(c)}"><div class="fold">${PINEMOJI[c]}</div><span>${esc(c)}</span><span class="cnt">${n}</span><button class="dots">⋮</button></div>`;
+  }).join("");
+  $$("#pinList .pinrow").forEach(el=>el.onclick=e=>{ if(e.target.classList.contains("dots"))return; openView("notes",{cat:el.dataset.cat}); });
+}
+function spark(color){
+  const p=[8,14,10,18,14,22,19,26]; const pts=p.map((v,i)=>`${i*14},${30-v}`).join(" ");
+  return `<svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2"/></svg>`;
+}
+function renderSys(){
+  const s=state.sys;
+  $("#sysGrid").innerHTML=`
+    <div class="sysbox"><small>Tasks Completed</small><div class="v">${s.tasks} <span class="d">↑ +${s.tasksD}%</span></div>${spark("#38e1ff")}</div>
+    <div class="sysbox"><small>Time Saved</small><div class="v">${s.time} <span style="font-size:13px">hrs</span> <span class="d">↑ +${s.timeD}%</span></div>${spark("#b06bff")}</div>
+    <div class="sysbox"><small>Apps Connected</small><div class="v">${s.apps} <span class="d">↑ +${s.appsD}</span></div>${spark("#5b8cff")}</div>
+    <div class="sysbox"><small>Automations Active</small><div class="v">${s.auto} <span class="d">↑ +${s.autoD}</span></div>${spark("#34e0a1")}</div>`;
+}
+function renderNeural(){
+  const tags={sens:["sens","SENSORY","#38e1ff"],act:["act","ACTION","#b06bff"],mem:["mem","MEMORY","#ff6bd8"]};
+  $("#neuralFeed").innerHTML=state.neural.slice(0,3).map(n=>{
+    const t=tags[n.k]; return `<div class="nlrow"><span class="tag ${t[0]}">${t[1]}</span><span>${esc(n.t)}</span><small>${esc(n.time)}</small><span class="blip" style="background:${t[2]};box-shadow:0 0 8px ${t[2]}"></span></div>`;
+  }).join("");
+}
+</script>
+<script>
+"use strict";
+/* ================= MODULE VIEWS ================= */
+let drawerView="dashboard", drawerArg=null;
+function openView(v,arg){ drawerView=v; drawerArg=arg||null;
+  $$(".navitem").forEach(n=>n.classList.toggle("active",n.dataset.view===v||(v==="dashboard"&&n.dataset.view==="dashboard")));
+  if(v==="dashboard"){ $("#drawer").classList.remove("open"); return; }
+  renderView(); $("#drawer").classList.add("open"); }
+function closeDrawer(){ $("#drawer").classList.remove("open"); $$(".navitem").forEach(n=>n.classList.toggle("active",n.dataset.view==="dashboard")); }
+$("#drawerClose").onclick=closeDrawer;
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ closeDrawer(); closeModal(); $("#admin").classList.remove("open"); }});
+$$(".navitem").forEach(n=>n.onclick=()=>openView(n.dataset.view));
+document.addEventListener("click",e=>{ const el=e.target.closest("[data-view]"); if(el&&!el.classList.contains("navitem")&&!el.classList.contains("orb")&&!el.classList.contains("count")&&!el.classList.contains("engcard")) openView(el.dataset.view); });
+
+const VTITLES={chat:"💬 Chat with Caelia",tasks:"✓ Tasks",apps:"▦ Apps",agents:"◉ Agents",skills:"★ Skills",plugins:"🔗 Plugins & Connectors",files:"📄 Files & Downloads",notes:"📝 Notes",memory:"🧠 Memory",automations:"⚙ Automations",analytics:"📊 Analytics",engines:"🧊 Engines",marketplace:"🛒 Marketplace",settings:"⚙ Settings"};
+
+function renderView(){
+  const v=drawerView, B=$("#drawerBody");
+  $("#drawerTitle").textContent=VTITLES[v]||v;
+  ({chat:vChat,tasks:vTasks,apps:vApps,agents:vAgents,skills:vSkills,plugins:vPlugins,files:vFiles,
+    notes:vNotes,memory:vMemory,automations:vAutomations,analytics:vAnalytics,engines:vEngines,
+    marketplace:vMarketplace,settings:vSettings}[v]||vDashboard)(B);
+}
+/* ---- CHAT ---- */
+function chatHTML(target){ return `
+  <div class="card"><b style="font-size:12px;color:var(--dim)">Live Brain mode: this chat calls the brain endpoint when it is running. <span class="backendTag">BACKEND</span></b></div>
+  <div id="chatBox"><div id="chatLog"></div>
+    <div class="rowflex" style="margin-top:8px">
+      <input class="tinput" id="chatInput" placeholder="Ask ${target==="private"?"Caelia privately":"Caelia"} anything...">
+      <button class="btn" id="chatSend">Send</button>
+    </div></div>`; }
+function bindChat(target){
+  const log=$("#chatLog");
+  const msgs=target==="private"?state.privChat||(state.privChat=[]):state.chat;
+  log.innerHTML=msgs.map(m=>`<div class="msg ${m.who}">${esc(m.text)}</div>`).join("")||`<div class="msg sys">No messages yet. Say hello — Caelia's brain backend is not connected yet, so she will answer when it is live. Everything you type is saved.</div>`;
+  log.scrollTop=log.scrollHeight;
+  const send=async()=>{
+    const inp=$("#chatInput"), t=inp.value.trim(); if(!t)return; inp.value="";
+    msgs.push({who:"u",text:t}); save(); bindChat(target);
+    logActivity("💬",`Chat with Caelia: ${t.slice(0,34)}`);
+    const r=await BrainAPI.chat(t);
+    msgs.push({who:"sys",text:r.ok?(r.reply||r.answer||"Caelia received the message."):(r.note||r.error||"Backend unavailable")}); save(); bindChat(target);
+    if(target!=="private") pushNeural(r.ok?"act":"mem",r.ok?"Caelia Brain responded":"Message held locally — backend unavailable");
+  };
+  $("#chatSend").onclick=send;
+  $("#chatInput").onkeydown=e=>{ if(e.key==="Enter") send(); };
+}
+function vChat(B){ B.innerHTML=chatHTML("main"); bindChat("main"); }
+/* ---- TASKS ---- */
+function vTasks(B){
+  B.innerHTML=`<div class="card"><h4>New task</h4><div class="rowflex">
+    <input class="tinput" id="tTitle" placeholder="What needs doing?"><button class="btn" id="tAdd">Add</button></div></div>
+    <div class="card"><h4>Active Tasks</h4><div id="tList"></div></div>`;
+  const paint=()=>{ $("#tList").innerHTML=state.tasks.map(t=>`
+    <div class="listitem ${t.status==="complete"?"done":""}">
+      <button class="tgl ${t.status==="complete"?"on":""}" data-t="${t.id}"></button>
+      <div class="lt">${esc(t.title)}<div class="ls">${new Date(t.ts).toLocaleDateString()}</div></div>
+      <span class="pill ${t.status==="complete"?"done":"prog"}">${t.status.toUpperCase().replace(" ","&nbsp;")}</span>
+      <button class="x" data-del="${t.id}" style="width:26px;height:26px;font-size:12px">✕</button>
+    </div>`).join("")||`<p style="color:var(--faint);font-size:12px">No tasks yet.</p>`;
+    $$("#tList .tgl").forEach(b=>b.onclick=()=>{ const t=state.tasks.find(x=>x.id==b.dataset.t);
+      t.status=t.status==="complete"?"in progress":"complete";
+      if(t.status==="complete"){ state.sys.tasks++; } save(); paint(); renderSys(); logActivity("✓",`Task ${t.status}: ${t.title.slice(0,30)}`); });
+    $$("#tList [data-del]").forEach(b=>b.onclick=()=>{ state.tasks=state.tasks.filter(x=>x.id!=b.dataset.del); save(); paint(); });
+  };
+  $("#tAdd").onclick=()=>{ const i=$("#tTitle"),v=i.value.trim(); if(!v)return;
+    state.tasks.unshift({id:nid(),title:v,status:"in progress",ts:Date.now()}); save(); paint();
+    logActivity("✓",`New task: ${v.slice(0,34)}`); i.value=""; };
+  paint();
+}
+/* ---- APPS ---- */
+function vApps(B){
+  B.innerHTML=`<div class="card"><h4>Connected Apps (${state.apps.length})</h4><div id="appList"></div>
+    <div class="rowflex" style="margin-top:8px"><input class="tinput" id="appName" placeholder="App name">
+    <input class="tinput" id="appUrl" placeholder="URL"><button class="btn sm" id="appAdd">Plug in</button></div>
+    <p style="font-size:11px;color:var(--faint);margin-top:8px">Apps plug in as satellites — the motherboard only tracks Worth, Status, Revenue.</p></div>
+    <div class="card"><h4>What Caelia needs to function</h4><div id="reqList"></div></div>`;
+  const paint=()=>{ $("#appList").innerHTML=state.apps.map((a,i)=>`
+    <div class="listitem"><div class="lt"><b>${esc(a.n)}</b><div class="ls">${esc(a.u||"")}</div></div>
+    <span class="pill info">SATELLITE</span><button class="x" data-ai="${i}" style="width:26px;height:26px;font-size:12px">✕</button></div>`).join("");
+    $$("#appList [data-ai]").forEach(b=>b.onclick=()=>{ state.apps.splice(+b.dataset.ai,1); state.counters.apps=state.apps.length; save(); paint(); renderCounters(); }); };
+  $("#appAdd").onclick=()=>{ const n=$("#appName").value.trim(); if(!n)return;
+    state.apps.push({n,u:$("#appUrl").value.trim()}); state.counters.apps=state.apps.length; save(); paint(); renderCounters();
+    logActivity("▦",`App plugged in: ${n}`); $("#appName").value=""; $("#appUrl").value=""; };
+  $("#reqList").innerHTML=state.requirements.map(r=>`
+    <div class="kv"><span>${r.st==="ready"?"✅":"⏳"} ${esc(r.n)}</span><b style="color:${r.st==="ready"?"var(--ok)":"var(--warn)"}">${r.st.toUpperCase()}</b></div>`).join("");
+  paint();
+}
+/* ---- AGENTS ---- */
+function vAgents(B){
+  B.innerHTML=`<div class="card"><h4>Agents</h4>${state.agents.map(a=>`
+    <div class="listitem"><div class="lt"><b>${esc(a.n)}</b><div class="ls">${esc(a.r)}</div></div>
+    <button class="btn sm ghost" data-dlg="${esc(a.n)}">Delegate</button></div>`).join("")}
+    <p style="font-size:11px;color:var(--faint)">Delegation Switchboard: Caelia bridges specialized tasks to agents in their own containers and brings the result back. <span class="backendTag">BACKEND</span></p></div>`;
+  $$("#drawerBody [data-dlg]").forEach(b=>b.onclick=()=>{
+    modal(`<h3>Delegate to ${esc(b.dataset.dlg)}</h3><div class="fld"><label>Task</label><input class="tinput" id="mTask"></div>
+    <div class="rowflex"><button class="btn" id="mGo">Send</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div>`);
+    $("#mGo").onclick=()=>{ const t=$("#mTask").value.trim(); if(!t)return; closeModal();
+      pushNeural("act",`Delegated to ${b.dataset.dlg}: ${t.slice(0,40)}`); logActivity("◉",`Delegated to ${b.dataset.dlg}`); toast(`Sent to ${b.dataset.dlg} — result returns here when the backend is live.`); }; });
+}
+/* ---- SKILLS ---- */
+function vSkills(B){
+  B.innerHTML=`<div class="card"><h4>Curated Skills</h4>${state.skills.map((s,i)=>`
+    <div class="listitem"><div class="lt">${esc(s.n)}</div><button class="tgl ${s.on?"on":""}" data-si="${i}"></button></div>`).join("")}</div>`;
+  $$("#drawerBody [data-si]").forEach(b=>b.onclick=()=>{ const s=state.skills[+b.dataset.si]; s.on=!s.on;
+    state.counters.skills=state.skills.filter(x=>x.on).length; save(); b.classList.toggle("on",s.on); renderCounters(); });
+}
+/* ---- PLUGINS ---- */
+function vPlugins(B){
+  B.innerHTML=`<div class="card"><h4>Plugins &amp; Connectors</h4>
+    <p style="font-size:11px;color:var(--dim);margin-bottom:8px">No coding required. Least-privilege: connectors only see what they need.</p>
+    ${state.plugins.map((p,i)=>`<div class="listitem"><div class="lt">${esc(p.n)}</div><button class="tgl ${p.on?"on":""}" data-pi="${i}"></button></div>`).join("")}</div>`;
+  $$("#drawerBody [data-pi]").forEach(b=>b.onclick=()=>{ const p=state.plugins[+b.dataset.pi]; p.on=!p.on;
+    state.counters.plugins=state.plugins.filter(x=>x.on).length; save(); b.classList.toggle("on",p.on); renderCounters();
+    logActivity("🔗",`${p.n} ${p.on?"connected":"disconnected"}`); });
+}
+/* ---- FILES ---- */
+function vFiles(B){
+  B.innerHTML=`<div class="card"><h4>Upload</h4>
+    <div class="rowflex"><button class="btn" id="fUp">Choose files</button><span style="font-size:11px;color:var(--faint)">Caelia reads and learns from uploads.</span></div></div>
+    <div class="card"><h4>Files (${state.files.length})</h4><div id="fList"></div></div>
+    <div class="card"><h4>⬇ Downloads</h4><p style="font-size:11px;color:var(--dim)">Exports and generated reports land here.</p><div id="dList"></div></div>`;
+  const paint=()=>{ $("#fList").innerHTML=state.files.map((f,i)=>`
+    <div class="listitem"><div class="lt"><b>${esc(f.n)}</b><div class="ls">${esc(f.t)} · ${(f.s/1024).toFixed(1)} KB</div></div>
+    <button class="btn sm ghost" data-dl="${i}">Download</button></div>`).join("")||`<p style="color:var(--faint);font-size:12px">No files yet.</p>`;
+    $$("#fList [data-dl]").forEach(b=>b.onclick=()=>{ const f=state.files[+b.dataset.dl];
+      if(f.data){ const a=document.createElement("a"); a.href=f.data; a.download=f.n; a.click(); }
+      else toast("File metadata only — original bytes were not retained for this upload."); }); };
+  $("#fUp").onclick=()=>{ const fp=$("#filePick"); fp.onchange=()=>{
+    [...fp.files].forEach(file=>{ const rd=new FileReader();
+      rd.onload=()=>{ state.files.unshift({n:file.name,t:file.type||"file",s:file.size,data:file.size<800000?rd.result:null});
+        state.counters.files++; save(); paint(); renderCounters(); logActivity("📄",`File uploaded: ${file.name.slice(0,30)}`); };
+      rd.readAsDataURL(file); }); fp.value=""; }; fp.click(); };
+  paint();
+}
+/* ---- NOTES ---- */
+function vNotes(B){
+  const cat=drawerArg&&drawerArg.cat;
+  B.innerHTML=`<div class="card"><h4>${cat?"Notes — "+esc(cat):"New note"}</h4>
+    <div class="fld" style="margin-bottom:8px"><input class="tinput" id="nTitle" placeholder="Title"></div>
+    <div class="fld" style="margin-bottom:8px"><select class="tinput" id="nCat">${PINCATS.concat(["Q4 Planning","Travel & Family","Wellness & Fitness","Client Projects","Work Administration"]).map(c=>`<option ${c===cat?"selected":""}>${c}</option>`).join("")}</select></div>
+    <div class="fld" style="margin-bottom:8px"><textarea class="tinput" id="nBody" rows="3" placeholder="Write..."></textarea></div>
+    <button class="btn" id="nAdd">Pin note</button></div>
+    <div class="card"><h4>Pinned Notes</h4><div id="nList"></div></div>`;
+  const paint=()=>{ const list=cat?state.notes.filter(n=>n.cat===cat):state.notes;
+    $("#nList").innerHTML=list.map(n=>`
+    <div class="listitem"><div class="lt"><b>${esc(n.title)}</b><div class="ls">${esc(n.cat)} · ${esc(n.body.slice(0,60))}</div></div>
+    <button class="x" data-nd="${n.id}" style="width:26px;height:26px;font-size:12px">✕</button></div>`).join("")||`<p style="color:var(--faint);font-size:12px">Nothing pinned here yet.</p>`;
+    $$("#nList [data-nd]").forEach(b=>b.onclick=()=>{ state.notes=state.notes.filter(x=>x.id!=b.dataset.nd); save(); paint(); renderPins(); }); };
+  $("#nAdd").onclick=()=>{ const t=$("#nTitle").value.trim(); if(!t)return;
+    state.notes.unshift({id:nid(),cat:$("#nCat").value,title:t,body:$("#nBody").value,ts:Date.now()});
+    save(); paint(); renderPins(); logActivity("📌",`Note pinned: ${t.slice(0,30)}`); $("#nTitle").value=""; $("#nBody").value=""; };
+  paint();
+}
+/* ---- MEMORY ---- */
+function vMemory(B){
+  B.innerHTML=`<div class="card"><h4>Short-term — current context</h4>
+    <p style="font-size:12px;color:var(--dim)">This conversation and session. Clears when the session ends; Saved Facts persist.</p></div>
+    <div class="card"><h4>Save a Memory</h4><div class="rowflex">
+    <input class="tinput" id="mText" placeholder="Something Caelia should remember..."><button class="btn" id="mAdd">Save</button></div></div>
+    <div class="card"><h4>Saved Facts (${state.facts.length})</h4><div id="mList"></div></div>
+    <div class="card"><h4>Daily Session Summaries</h4><p style="font-size:12px;color:var(--faint)">Summaries generate when the Brain backend is live. <span class="backendTag">BACKEND</span></p></div>`;
+  const paint=()=>{ $("#mList").innerHTML=state.facts.map(f=>`
+    <div class="listitem"><div class="lt">${esc(f.text)}<div class="ls">${new Date(f.ts).toLocaleString()}</div></div>
+    <button class="x" data-md="${f.id}" style="width:26px;height:26px;font-size:12px">✕</button></div>`).join("");
+    $$("#mList [data-md]").forEach(b=>b.onclick=()=>{ state.facts=state.facts.filter(x=>x.id!=b.dataset.md);
+      state.counters.memory=state.facts.length; save(); paint(); renderCounters(); }); };
+  $("#mAdd").onclick=()=>{ const v=$("#mText").value.trim(); if(!v)return;
+    state.facts.unshift({id:nid(),text:v,ts:Date.now()}); state.counters.memory=state.facts.length;
+    save(); paint(); renderCounters(); logActivity("🧠",`Memory saved`); $("#mText").value=""; toast("Saved to Caelia's memory."); };
+  paint();
+}
+/* ---- AUTOMATIONS ---- */
+const AUTOCATS=["Work productivity","Business growth","Money handling","Home organizer","Education","Wellness"];
+function vAutomations(B){
+  B.innerHTML=`<div class="card"><h4>New automation</h4><div class="rowflex">
+    <input class="tinput" id="aName" placeholder="Name"><select class="tinput" id="aCat" style="max-width:170px">${AUTOCATS.map(c=>`<option>${c}</option>`).join("")}</select>
+    <button class="btn sm" id="aAdd">Create</button></div>
+    <p style="font-size:11px;color:var(--faint);margin-top:6px">Scheduled + triggered, running 24/7 in the background.</p></div>
+    <div class="card"><h4>Automations</h4><div id="aList"></div></div>`;
+  const paint=()=>{ $("#aList").innerHTML=state.automations.map(a=>`
+    <div class="listitem"><div class="lt"><b>${esc(a.name)}</b><div class="ls">${esc(a.cat)}</div></div>
+    <button class="tgl ${a.on?"on":""}" data-ab="${a.id}"></button></div>`).join("");
+    $$("#aList [data-ab]").forEach(b=>b.onclick=()=>{ const a=state.automations.find(x=>x.id==b.dataset.ab); a.on=!a.on;
+      state.counters.automations=state.automations.filter(x=>x.on).length; save(); b.classList.toggle("on",a.on); renderCounters(); }); };
+  $("#aAdd").onclick=()=>{ const v=$("#aName").value.trim(); if(!v)return;
+    state.automations.unshift({id:nid(),name:v,cat:$("#aCat").value,on:true});
+    state.counters.automations=state.automations.filter(x=>x.on).length; save(); paint(); renderCounters();
+    logActivity("⚙️",`Automation created: ${v.slice(0,30)}`); $("#aName").value=""; };
+  paint();
+}
+/* ---- ANALYTICS ---- */
+function vAnalytics(B){
+  const L=state.learning;
+  B.innerHTML=`<div class="card"><h4>Caelia's Self-Analytics <span class="backendTag">LOCAL DEMO</span></h4>
+    ${[["Core learning",L.core,"#38e1ff"],["Experiential learning",L.experiential,"#b06bff"],["Ethics / soul",L.ethics,"#ff6bd8"]].map(x=>`
+    <div style="margin:10px 0"><div class="rowflex" style="justify-content:space-between;font-size:12px"><span>${x[0]}</span><b>${x[1]}%</b></div>
+    <div id="storageTrack" style="margin-top:5px"><div id="storageFill" style="width:${x[1]}%;background:${x[2]}"></div></div></div>`).join("")}
+    <p style="font-size:11px;color:var(--faint)">Live percentages arrive with the Brain backend. Teaching happens in the hidden admin.</p></div>
+    <div class="card"><h4>Connected-App Analytics</h4>
+    <div class="ph" data-ph="app analytics"><b>App Analytics</b>Plug in an app to light this up</div></div>
+    <div class="card"><h4>Renter / Shop Analytics</h4>
+    <div class="ph" data-ph="renter analytics"><b>Renter Analytics</b>Design open — central or per-renter dashboards</div></div>`;
+  $$("#drawerBody .ph").forEach(p=>p.onclick=()=>toast(`"${p.dataset.ph}" is a labeled placeholder — ready for a future app.`));
+}
+/* ---- ENGINES ---- */
+function vEngines(B){
+  const eng=drawerArg&&drawerArg.eng;
+  B.innerHTML=[["personal","Personal / Commercial Engine","Personal Evaluation","#38e1ff"],
+    ["qvpro","QV Pro Engine","Commercial Evaluation","#ff6bd8"]].map(e=>`
+    <div class="card"><h4>${e[1]} ${eng===e[0]?'<span class="pill info">SELECTED</span>':""}</h4>
+    <p style="font-size:12px;color:var(--dim);margin-bottom:10px">${e[2]}. Engines run as services under Caelia's authority — never inside her core.</p>
+    <div class="rowflex"><input class="tinput" id="eIn-${e[0]}" placeholder="What should be evaluated?">
+    <button class="btn sm" data-run="${e[0]}">Run</button></div>
+    <div id="eOut-${e[0]}" style="margin-top:8px;font-size:12px"></div></div>`).join("")+
+    `<div class="card"><h4>What Caelia needs to function</h4>${state.requirements.map(r=>`
+    <div class="kv"><span>${r.st==="ready"?"✅":"⏳"} ${esc(r.n)}</span><b style="color:${r.st==="ready"?"var(--ok)":"var(--warn)"}">${r.st.toUpperCase()}</b></div>`).join("")}</div>`;
+  $$("#drawerBody [data-run]").forEach(b=>b.onclick=async()=>{
+    const id=b.dataset.run, q=$("#eIn-"+id).value.trim()||"Untitled evaluation";
+    const r=await BrainAPI.runEngine(id,{q});
+    $("#eOut-"+id).innerHTML=`<div class="msg sys" style="margin:0">${esc(r.note)}</div>`;
+    logActivity("🧊",`Evaluation requested (${id}): ${q.slice(0,30)}`); pushNeural("sens",`Evaluation heartbeat → ${id}`); });
+}
+/* ---- MARKETPLACE ---- */
+function vMarketplace(B){
+  B.innerHTML=`<div class="card"><h4>Marketplace</h4>
+    <div class="ph" data-ph="marketplace listings"><b>Listings open soon</b>Tools, skills and services will appear here</div></div>
+    <div class="card"><h4>Ad Decisions</h4>
+    <div class="ph" data-ph="ad decisions"><b>Undecided</b>Alicia hasn't placed ads inside or outside yet</div></div>`;
+  $$("#drawerBody .ph").forEach(p=>p.onclick=()=>toast(`"${p.dataset.ph}" is a labeled placeholder.`));
+}
+/* ---- SETTINGS ---- */
+function vSettings(B){
+  B.innerHTML=`<div class="card"><h4>Profile</h4>
+    <div class="kv"><span>Owner</span><b>Alicia</b></div>
+    <div class="kv"><span>Theme</span><b>Night (only)</b></div>
+    <div class="kv"><span>Representation mode</span><b>${esc(state.role)}</b></div></div>
+    <div class="card"><h4>Voice</h4>
+    <div class="listitem"><div class="lt">Caelia voice output<small class="ls" style="display:block">Speaks her messages aloud when available</small></div>
+    <button class="tgl ${state.voiceOut?"on":""}" id="vTgl"></button></div>
+    <p style="font-size:11px;color:var(--faint)">Mic input: header mic button. Full voice server attaches with the backend. <span class="backendTag">BACKEND</span></p></div>
+    <div class="card"><h4>Danger zone</h4>
+    <button class="btn danger sm" id="wipeBtn">Reset local demo data</button></div>`;
+  $("#vTgl").onclick=e=>{ state.voiceOut=!state.voiceOut; save(); e.target.classList.toggle("on",state.voiceOut);
+    toast(state.voiceOut?"Voice output on.":"Voice output off."); };
+  $("#wipeBtn").onclick=()=>{ if(confirm("Reset all local dashboard data?")){ localStorage.removeItem(LSKEY); location.reload(); } };
+}
+function vDashboard(){ closeDrawer(); }
+</script>
+<script>
+"use strict";
+/* ================= CAELIA FUNCTION BUTTONS (original dashboard) ================= */
+function taskModal(){ modal(`<h3>New Task</h3><div class="fld"><label>Title</label><input class="tinput" id="mT"></div>
+  <div class="rowflex"><button class="btn" id="mTGo">Add task</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div>`);
+  $("#mTGo").onclick=()=>{ const v=$("#mT").value.trim(); if(!v)return;
+    state.tasks.unshift({id:nid(),title:v,status:"in progress",ts:Date.now()}); save(); closeModal();
+    logActivity("✓","New task: "+v.slice(0,34)); toast("Task added."); }; }
+function memModal(){ modal(`<h3>Save Memory</h3><div class="fld"><label>Something Caelia should remember</label><textarea class="tinput" id="mM" rows="3"></textarea></div>
+  <div class="rowflex"><button class="btn" id="mMGo">Save</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div>`);
+  $("#mMGo").onclick=()=>{ const v=$("#mM").value.trim(); if(!v)return;
+    state.facts.unshift({id:nid(),text:v,ts:Date.now()}); state.counters.memory=state.facts.length; save(); closeModal();
+    renderCounters(); logActivity("🧠","Memory saved"); toast("Saved to Caelia's memory."); }; }
+$$("#caeliaBtns .cbtn").forEach(b=>b.onclick=()=>{
+  const f=b.dataset.cfn;
+  if(f==="ask"){ $("#askInput").focus(); }
+  else if(f==="savemem"){ memModal(); }
+  else if(f==="newtask"){ taskModal(); }
+  else if(f==="presence"){ togglePresence(); }
+  else if(f==="represent"){ modal(`<h3>Represent Alicia</h3><div class="fld"><label>Mode</label>
+    <select class="tinput" id="mR">${["Caelia as herself","Representing Alicia — business","Representing Alicia — personal","Silent observer"].map(r=>`<option ${r===state.role?"selected":""}>${r}</option>`).join("")}</select></div>
+    <div class="rowflex"><button class="btn" id="mRGo">Set</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div>`);
+    $("#mRGo").onclick=()=>{ state.role=$("#mR").value; save(); closeModal(); logActivity("🎭","Representation: "+state.role); toast("Caelia will represent you: "+state.role); }; }
+  else if(f==="private"){ openView("chat",{priv:true}); }
+});
+function togglePresence(){ state.presence=!state.presence; save(); paintPresence();
+  logActivity(state.presence?"🌟":"🌙","Caelia presence "+(state.presence?"on":"away"));
+  toast(state.presence?"Caelia is present.":"Caelia stepped away — her current-state portrait remains."); }
+function paintPresence(){ $("#sunCore").classList.toggle("away",!state.presence);
+  $("#presenceLabel").textContent=state.presence?"CAELIA ONLINE":"CAELIA AWAY"; }
+$("#presenceCard").onclick=togglePresence;
+
+/* private chat support (re-declared vChat with private mode) */
+function vChat(B){ const priv=drawerArg&&drawerArg.priv;
+  B.innerHTML=(priv?`<div class="card"><b style="font-size:12px;color:var(--pink)">🔒 Private Caelia — just you and her. Nothing here is shared.</b></div>`:"")+chatHTML(priv?"private":"main");
+  bindChat(priv?"private":"main"); }
+
+/* ================= QUICK ACTIONS ================= */
+$$(".qalist button").forEach(b=>b.onclick=()=>{
+  const a=b.dataset.act;
+  if(a==="newchat") openView("chat");
+  else if(a==="newtask") taskModal();
+  else if(a==="upload") openView("files");
+  else if(a==="newnote") openView("notes");
+  else if(a==="runeval") openView("engines");
+  else if(a==="buildapp"){ modal(`<h3>Build an App</h3>
+    <div class="fld"><label>App name</label><input class="tinput" id="bN"></div>
+    <div class="fld"><label>URL / home</label><input class="tinput" id="bU"></div>
+    <div class="rowflex"><button class="btn" id="bGo">Plug in as satellite</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div>`);
+    $("#bGo").onclick=()=>{ const n=$("#bN").value.trim(); if(!n)return;
+      state.apps.push({n,u:$("#bU").value.trim()}); state.counters.apps=state.apps.length; save(); closeModal();
+      renderCounters(); logActivity("▦","App plugged in: "+n); toast(n+" is now a satellite."); }; }
+  else if(a==="newauto") openView("automations");
+  else if(a==="quickadd") toast("Custom quick actions can be added here later.");
+});
+$$(".engcard").forEach(el=>el.onclick=()=>openView("engines",{eng:el.dataset.eng}));
+$$(".plus[data-act]").forEach(p=>p.onclick=()=>{ if(p.dataset.act==="newnote") openView("notes"); else toast("Coming soon."); });
+
+/* ================= ASK / VOICE ================= */
+function askSend(){ const q=$("#askInput").value.trim(); if(!q)return; $("#askInput").value="";
+  openView("chat"); setTimeout(()=>{ const i=$("#chatInput"); if(i){ i.value=q; $("#chatSend").click(); } },60); }
+$("#askGo").onclick=askSend; $("#askInput").onkeydown=e=>{ if(e.key==="Enter") askSend(); };
+$("#micBtn").onclick=()=>{
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ toast("Voice input isn't supported in this browser."); return; }
+  try{ const r=new SR(); r.lang="en-US";
+    r.onresult=e=>{ const t=e.results[0][0].transcript; $("#askInput").value=t; toast("Heard: "+t); };
+    r.onerror=()=>toast("Couldn't hear that — try again.");
+    r.start(); toast("Listening... speak now.");
+  }catch(e){ toast("Microphone unavailable."); } };
+$("#speakToggle").onclick=()=>{ state.voiceOut=!state.voiceOut; save();
+  $("#speakToggle").style.boxShadow=state.voiceOut?"var(--glow-c)":"";
+  toast(state.voiceOut?"Caelia voice output ON.":"Caelia voice output OFF.");
+  if(state.voiceOut) BrainAPI.speak("Voice output enabled."); };
+$("#bellBtn").onclick=()=>{ modal(`<h3>🔔 Notifications</h3>${state.activity.slice(0,8).map(a=>
+  `<div class="kv"><span>${a.i} ${esc(a.t)}</span><b>${esc(a.time)}</b></div>`).join("")}
+  <div class="rowflex" style="margin-top:10px"><button class="btn ghost" onclick="closeModal()">Close</button></div>`); };
+
+/* ================= NEURAL FEED ================= */
+function pushNeural(k,t){ state.neural.unshift({k,t,time:"just now"}); state.neural=state.neural.slice(0,8); save(); renderNeural(); }
+
+/* ================= HIDDEN ADMIN ================= */
+$("#crystalBtn").onclick=()=>{ renderAdmin(); $("#admin").classList.add("open"); setTimeout(async()=>{
+  const inp=$("#brainToken"), st=$("#brainStatus"); if(inp) inp.value=BrainAPI.token;
+  const r=await BrainAPI.health(); if(st) st.textContent=r.ok?"● Caelia Brain connected — backend healthy":"○ Backend not reachable yet — local Motherboard mode remains available.";
+},50); logActivity("△","Hidden admin opened"); };
+$("#admin").addEventListener("click",e=>{ if(e.target.id==="brainConnect"){ BrainAPI.setToken($("#brainToken").value); BrainAPI.health().then(r=>{ $("#brainStatus").textContent=r.ok?"● Caelia Brain connected — token accepted":"○ Connection failed — check backend and token."; toast(r.ok?"Caelia Brain connected":"Could not connect to Caelia Brain"); }); }});
+$("#adminClose").onclick=()=>$("#admin").classList.remove("open");
+$("#admin").addEventListener("click",e=>{ if(e.target.id==="admin") $("#admin").classList.remove("open"); });
+function renderAdmin(){
+  paintTeach(); paintTom(); paintTokens(); paintSafe(); paintSoul(); paintFailsafe(); paintOverrides(); paintMoney(); paintPriv();
+  $("#roleSelect").value=state.role;
+}
+function paintTeach(){
+  $("#teachQueue").innerHTML=state.teachQueue.map((t,i)=>`<div class="kv"><span>📜 ${esc(t.d)}</span><b style="color:var(--warn)">QUEUED · LOCAL</b></div>`).join("")||`<p style="font-size:11px;color:var(--faint)">No directives queued.</p>`;
+  const L=state.learning;
+  $("#learnMetrics").innerHTML=[["Core learning",L.core,"#38e1ff"],["Experiential",L.experiential,"#b06bff"],["Ethics / soul",L.ethics,"#ff6bd8"]].map(x=>`
+    <div class="rowflex" style="font-size:11px;margin:5px 0"><span style="width:110px">${x[0]}</span>
+    <div style="flex:1;height:8px;border-radius:99px;background:rgba(10,18,50,.9)"><div style="height:100%;width:${x[1]}%;border-radius:99px;background:${x[2]};box-shadow:0 0 8px ${x[2]}"></div></div><b>${x[1]}%</b></div>`).join("");
+}
+async function teachDirective(d){ if(!d)return;
+  state.teachQueue.unshift({d,ts:Date.now()}); save(); paintTeach();
+  const r=await BrainAPI.teach(d); pushNeural("mem","Teaching queued: "+d.slice(0,40));
+  logActivity("📜","Directive taught: "+d.slice(0,34)); toast(r.note); }
+$$("#teachCtls button").forEach(b=>b.onclick=()=>{
+  if(b.dataset.t==="+ custom directive"){ $("#teachInput").focus(); return; } teachDirective(b.dataset.t); });
+$("#teachSend").onclick=()=>{ teachDirective($("#teachInput").value.trim()); $("#teachInput").value=""; };
+$("#teachInput").onkeydown=e=>{ if(e.key==="Enter") $("#teachSend").click(); };
+function paintTom(){ $("#tomBox").textContent=state.tom&&state.tom.length?state.tom.map(t=>"▪ "+t).join("\n"):"— sealed · Alicia only —"; }
+$("#tomAdd").onclick=()=>{ const v=$("#tomInput").value.trim(); if(!v)return;
+  (state.tom||(state.tom=[])).push(v); save(); paintTom(); $("#tomInput").value=""; toast("Sealed in Tom's box."); };
+function paintTokens(){ $("#tokenList").innerHTML=state.tokens.map(t=>`<div class="kv"><span>🗝 ${esc(t.n)}</span><b>NAME ONLY</b></div>`).join("")||`<p style="font-size:11px;color:var(--faint)">No tokens stored.</p>`; }
+$("#tokenAdd").onclick=()=>{ const v=$("#tokenName").value.trim(); if(!v)return;
+  state.tokens.push({n:v,ts:Date.now()}); save(); paintTokens(); $("#tokenName").value=""; toast("Token name stored. Enter the value at the service itself."); };
+function paintSafe(){ $("#safeFiles").innerHTML=state.safeFiles.map(f=>`<div class="kv"><span>📁 ${esc(f.n)}</span><b>PROTECTED</b></div>`).join("")||`<p style="font-size:11px;color:var(--faint)">Safe folder is empty.</p>`; }
+$("#safeUpload").onclick=()=>{ const fp=$("#filePick"); fp.onchange=()=>{ [...fp.files].forEach(f=>{
+  state.safeFiles.push({n:f.name,ts:Date.now()}); }); save(); paintSafe(); fp.value=""; toast("Filed in the safe folder."); }; fp.click(); };
+function paintSoul(){ /* soul lessons shown inline as activity */ }
+$("#soulAdd").onclick=()=>{ const v=$("#soulInput").value.trim(); if(!v)return;
+  state.soul.push({t:v,ts:Date.now()}); state.learning.ethics=Math.min(100,state.learning.ethics+1); save();
+  $("#soulInput").value=""; paintTeach(); pushNeural("mem","Soul lesson: "+v.slice(0,40)); logActivity("💜","Soul lesson taught"); toast("Lesson added to her soul."); };
+$("#failsafeSend").onclick=async()=>{ const v=$("#failsafeInput").value.trim(); if(!v)return;
+  const r=await BrainAPI.failsafe(v); state.failsafe.unshift({t:v,ts:Date.now()}); save(); paintFailsafe();
+  $("#failsafeInput").value=""; logActivity("🚨","Failsafe prompt sent"); toast(r.note); };
+function paintFailsafe(){ $("#failsafeLog").innerHTML=state.failsafe.map(f=>`<div class="kv"><span>🚨 ${esc(f.t)}</span><b>${new Date(f.ts).toLocaleTimeString()}</b></div>`).join(""); }
+function paintOverrides(){ $("#overrideList").innerHTML=state.overrides.map(o=>`
+  <div class="listitem"><div class="lt">${esc(o.t)}<div class="ls">${o.status}</div></div>
+  ${o.status==="active"?`<button class="btn sm danger" data-ovc="${o.id}">Cancel</button>`:""}
+  ${o.status==="active"?`<button class="btn sm ghost" data-ovr="${o.id}">Replace</button>`:""}</div>`).join("")+
+  `<button class="btn sm ghost" id="ovFlag" style="margin-top:6px">+ Flag a public command</button>`;
+  const fl=$("#ovFlag"); if(fl) fl.onclick=()=>{ modal(`<h3>Flag a command</h3><div class="fld"><input class="tinput" id="ovT" placeholder="Command text"></div>
+    <div class="rowflex"><button class="btn" id="ovGo">Flag</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div>`);
+    $("#ovGo").onclick=()=>{ const v=$("#ovT").value.trim(); if(!v)return; state.overrides.unshift({id:nid(),t:v,status:"active",ts:Date.now()});
+      save(); closeModal(); paintOverrides(); }; };
+  $$("#overrideList [data-ovc]").forEach(b=>b.onclick=()=>{ const o=state.overrides.find(x=>x.id==b.dataset.ovc);
+    o.status="cancelled by Alicia"; save(); paintOverrides(); logActivity("⚖️","Command cancelled: "+o.t.slice(0,30)); });
+  $$("#overrideList [data-ovr]").forEach(b=>b.onclick=()=>{ modal(`<h3>Replace command</h3><div class="fld"><input class="tinput" id="ovR" placeholder="Replacement"></div>
+    <div class="rowflex"><button class="btn" id="ovRGo">Replace</button><button class="btn ghost" onclick="closeModal()">Cancel</button></div>`);
+    $("#ovRGo").onclick=()=>{ const v=$("#ovR").value.trim(); if(!v)return; const o=state.overrides.find(x=>x.id==b.dataset.ovr);
+      o.status="replaced by Alicia"; o.replacement=v; save(); closeModal(); paintOverrides(); logActivity("⚖️","Command replaced"); }; }); }
+let moneyTab="bills";
+$$("#adminIn [data-mtab]").forEach(b=>b.onclick=()=>{ moneyTab=b.dataset.mtab; paintMoney(); });
+function paintMoney(){ const list=state.money[moneyTab];
+  $("#moneyList").innerHTML=list.map((m,i)=>`<div class="kv"><span>${moneyTab==="bills"?"🧾":"💵"} ${esc(m.label)}</span><b>$${esc(m.amt)}</b></div>`).join("")||`<p style="font-size:11px;color:var(--faint)">No ${moneyTab} yet.</p>`; }
+$("#moneyAdd").onclick=()=>{ const l=$("#moneyLabel").value.trim(),a=$("#moneyAmt").value.trim(); if(!l)return;
+  state.money[moneyTab].push({label:l,amt:a||"0"}); save(); paintMoney(); $("#moneyLabel").value=""; $("#moneyAmt").value=""; };
+$("#roleSelect").onchange=e=>{ state.role=e.target.value; save(); logActivity("🎭","Role: "+state.role); toast("Role set: "+state.role); };
+function paintPriv(){ $("#privDiscuss").innerHTML=state.privDiscuss.map(p=>`<div class="kv"><span>💬 ${esc(p.t)}</span><b>${new Date(p.ts).toLocaleDateString()}</b></div>`).join("")||`<p style="font-size:11px;color:var(--faint)">No private notes yet.</p>`; }
+$("#privSend").onclick=()=>{ const v=$("#privInput").value.trim(); if(!v)return;
+  state.privDiscuss.unshift({t:v,ts:Date.now()}); save(); paintPriv(); $("#privInput").value=""; };
+
+/* ================= INIT ================= */
+buildOrbs(); renderCounters(); renderActivity(); renderPins(); renderSys(); renderNeural(); paintPresence();
+if(state.voiceOut) $("#speakToggle").style.boxShadow="var(--glow-c)";
+save();
+</script>
+</body>
+</html>

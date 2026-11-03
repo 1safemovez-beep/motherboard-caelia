@@ -1,3 +1,10 @@
 name = "motherboard-caelia"
 main = "src/worker.js"
 compatibility_date = "2026-10-06"
+
+# Serve the Motherboard dashboard (index.html + assets/) from this Worker.
+# Files listed in .assetsignore are never published.
+[assets]
+directory = "."
+binding = "ASSETS"
+not_found_handling = "single-page-application"

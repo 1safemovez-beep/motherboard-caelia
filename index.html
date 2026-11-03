@@ -851,7 +851,7 @@ function bindChat(target){
     msgs.push({who:"u",text:t}); save(); bindChat(target);
     logActivity("💬",`Chat with Caelia: ${t.slice(0,34)}`);
     const r=await BrainAPI.chat(t);
-    msgs.push({who:"sys",text:r.ok?(r.reply||r.answer||"Caelia received the message."):(r.note||r.error||"Backend unavailable")}); save(); bindChat(target);
+    msgs.push({who:"sys",text:r.ok?(r.reply||r.answer||r.note||"Caelia received the message."):(r.note||r.error||"Backend unavailable")}); save(); bindChat(target);
     if(target!=="private") pushNeural(r.ok?"act":"mem",r.ok?"Caelia Brain responded":"Message held locally — backend unavailable");
   };
   $("#chatSend").onclick=send;

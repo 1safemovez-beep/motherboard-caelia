@@ -303,6 +303,25 @@ header{grid-area:head;display:flex;align-items:center;gap:14px;padding:0 18px;
   background:linear-gradient(90deg,var(--pink),var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
 #adminIn .sub{font-size:11.5px;color:var(--dim);margin:4px 0 14px}
 .admingrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* ---------- Caelia status (hidden admin) ---------- */
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:8px}
+.cs-box{background:rgba(8,14,44,.6);border:1px solid rgba(80,140,255,.18);border-radius:12px;padding:10px 12px}
+.cs-box h5{margin:0 0 6px;font-size:11px;letter-spacing:1.2px;color:var(--dim);text-transform:uppercase}
+.cs-pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:4px 9px;border-radius:999px;margin:0 6px 6px 0;border:1px solid}
+.cs-pill.up{color:var(--ok);border-color:rgba(52,224,161,.5);background:rgba(52,224,161,.08)}
+.cs-pill.down{color:var(--bad);border-color:rgba(255,107,138,.5);background:rgba(255,107,138,.08)}
+.cs-big{font-size:22px;font-weight:700}
+.cs-row{display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:3px 0}
+.cs-bar{height:7px;border-radius:99px;background:rgba(10,18,50,.9);overflow:hidden;flex:1;margin-left:8px;align-self:center}
+.cs-bar i{display:block;height:100%;border-radius:99px}
+.cs-tl{display:flex;align-items:flex-end;gap:2px;height:60px;margin-top:6px}
+.cs-tl div{flex:1;display:flex;flex-direction:column-reverse;min-width:3px}
+.cs-tl span{display:block}
+.cs-ev{font-size:11.5px;padding:5px 0;border-bottom:1px solid rgba(80,140,255,.08)}
+.cs-ev b{font-weight:600}
+.cs-tag{font-size:10px;padding:1px 6px;border-radius:6px;margin-right:5px;border:1px solid rgba(154,167,216,.4);color:var(--dim)}
+.tut{background:rgba(8,14,44,.6);border:1px solid rgba(176,107,255,.25);border-radius:12px;padding:10px 12px;margin-top:8px}
+.tut textarea{width:100%;box-sizing:border-box;min-height:54px;border-radius:9px;border:1px solid rgba(141,234,255,.3);background:rgba(255,255,255,.04);color:var(--txt);padding:8px;font:inherit;font-size:12.5px;resize:vertical}
 .acard{background:rgba(18,26,70,.75);border:1px solid var(--line2);border-radius:14px;padding:13px 15px}
 .acard h4{font-size:13px;margin-bottom:9px;display:flex;align-items:center;gap:8px}
 .acard h4 .lk{font-size:16px}
@@ -528,6 +547,15 @@ header{grid-area:head;display:flex;align-items:center;gap:14px;padding:0 18px;
       <h4>🔐 Motherboard ↔ Caelia Brain</h4>
       <div class="rowflex"><span class="note" id="signedInUntil" style="margin:0;flex:1"></span><button class="btn sm" id="adminLock">Lock (sign out)</button></div>
       <p class="note" id="brainStatus">Checking https://backend.caeliasystems.com …</p>
+    </div>
+    <div class="acard" style="margin-bottom:12px">
+      <div class="rowflex"><h4 style="margin:0">🛰 Caelia Status</h4><span class="note" id="csTime" style="margin:0 0 0 auto"></span><button class="btn sm" id="csRefresh">↻ Refresh</button></div>
+      <div id="csBody"><p class="note">Loading…</p></div>
+    </div>
+    <div class="acard" style="margin-bottom:12px">
+      <div class="rowflex"><h4 style="margin:0">🎓 Tutors &amp; Lessons</h4><button class="btn sm" id="tutReview" style="margin-left:auto">Ask tutors to review</button></div>
+      <p class="note" style="margin-top:4px">Claude and GPT only <b>suggest</b> lessons. Nothing reaches Caelia until you approve it. You can edit a lesson before approving.</p>
+      <div id="tutBody"><p class="note">Loading…</p></div>
     </div>
     <div class="admingrid">
       <div class="acard">
@@ -1173,11 +1201,73 @@ $("#bellBtn").onclick=()=>{ modal(`<h3>🔔 Notifications</h3>${state.activity.s
 function pushNeural(k,t){ state.neural.unshift({k,t,time:"just now"}); state.neural=state.neural.slice(0,8); save(); renderNeural(); }
 
 /* ================= HIDDEN ADMIN ================= */
-function openAdmin(){ renderAdmin(); $("#admin").classList.add("open"); logActivity("△","Hidden admin opened");
+function openAdmin(){ renderAdmin(); $("#admin").classList.add("open"); logActivity("△","Hidden admin opened"); paintCaelia(); paintTutors();
   const until=$("#signedInUntil"); if(until) until.textContent=BrainAPI.pass&&BrainAPI.pass.expiresAt?"● Signed in on this device until "+new Date(BrainAPI.pass.expiresAt).toLocaleDateString():"";
   setTimeout(async()=>{ const st=$("#brainStatus"); const r=await BrainAPI.health();
     if(st) st.textContent=!r.ok?"○ Backend not reachable yet — local Motherboard mode remains available."
       :r.brain&&r.brain.reachable?"● Caelia Brain connected — backend healthy":"○ Backend is up, but it can't reach Caelia's brain yet."; },50); }
+/* ================= CAELIA STATUS + TUTORS (hidden admin) ================= */
+const HOW_COLORS={taught:"#ffcf5c","self-learned":"#34e0a1",prompted:"#38e1ff",unprompted:"#b06bff"};
+const HOW_LABEL={taught:"Taught by you","self-learned":"Learned on her own",prompted:"From questions",unprompted:"Unprompted"};
+const ago=t=>{ const s=Math.max(0,(Date.now()-Date.parse(t))/1000); return s<60?"just now":s<3600?Math.floor(s/60)+"m ago":s<86400?Math.floor(s/3600)+"h ago":Math.floor(s/86400)+"d ago"; };
+async function paintCaelia(){
+  const body=$("#csBody"); if(!body) return;
+  const r=await BrainAPI.request("/caelia/overview",undefined,"GET");
+  if(!r.ok){ body.innerHTML=`<p class="note">Couldn't load status (${esc(r.note||r.error||"error")}). Make sure the backend update is deployed and you're signed in.</p>`; return; }
+  $("#csTime").textContent="Updated "+new Date(r.time).toLocaleTimeString();
+  const b=r.brain||{}; const en=b.engines||{}; const db=b.database||{}; const tr=b.tracker||{}; const st=tr.stats||{}; const by=st.byHow||{};
+  const svc=(r.services||[]).map(x=>`<span class="cs-pill ${x.ok?"up":"down"}">${x.ok?"●":"○"} ${esc(x.name)}${x.ms?` <small>${x.ms}ms</small>`:""}</span>`).join("");
+  const eng=(k,label)=>{ const e=en[k]||{}; return `<div class="cs-row"><span>${label}</span><b style="color:${e.on?"var(--ok)":"var(--faint)"}">${e.on?esc(e.model||"on"):"off"}</b></div>`; };
+  const la=b.lastAnswer; const u=la&&la.usage;
+  const total=Object.values(by).reduce((a,n)=>a+n,0)||0;
+  const bars=Object.keys(HOW_LABEL).map(k=>`<div class="cs-row"><span style="min-width:120px">${HOW_LABEL[k]}</span><b>${by[k]||0}</b><div class="cs-bar"><i style="width:${total?Math.round(100*(by[k]||0)/total):0}%;background:${HOW_COLORS[k]}"></i></div></div>`).join("");
+  const tl=tr.timeline||[]; const maxDay=Math.max(1,...tl.map(d=>Object.keys(HOW_LABEL).reduce((a,k)=>a+(d[k]||0),0)));
+  const tlHtml=tl.length?`<div class="cs-tl">${tl.map(d=>`<div title="${esc(d.day)}">${Object.keys(HOW_LABEL).map(k=>d[k]?`<span style="height:${Math.round(56*d[k]/maxDay)}px;background:${HOW_COLORS[k]}"></span>`:"").join("")}</div>`).join("")}</div><p class="note" style="margin:2px 0 0">Last ${tl.length} active day${tl.length===1?"":"s"}</p>`:`<p class="note">No learning recorded yet.</p>`;
+  const ev=(tr.recent||[]).slice(0,10).map(e=>`<div class="cs-ev"><span class="cs-tag" style="border-color:${HOW_COLORS[e.how]||"#5f6b9e"};color:${HOW_COLORS[e.how]||"var(--dim)"}">${esc(e.how||"")}</span>${esc(String(e.what||"").slice(0,120))} <span class="note" style="margin:0">· ${esc(e.taughtBy?("by "+e.taughtBy+" · "):"")}${ago(e.timestamp)}</span></div>`).join("")||`<p class="note">Nothing yet.</p>`;
+  const v=tr.verify; const vOk=v&&(v.ok===true||v.valid===true||v===true);
+  const dbHtml=db.connected?`<div class="cs-big">${db.records||0}</div><p class="note" style="margin:0 0 6px">records in Postgres · ${db.events||0} events</p>${(db.byDomain||[]).slice(0,8).map(d=>`<div class="cs-row"><span>${esc(d.domain)}</span><b>${d.n}</b></div>`).join("")}${(db.latest||[]).length?`<p class="note" style="margin:6px 0 2px">Latest</p>`+db.latest.slice(0,4).map(x=>`<div class="cs-row"><span>${esc(String(x.title||x.kind||"").slice(0,40))}</span><span class="note" style="margin:0">${esc(x.domain)}</span></div>`).join(""):""}`
+    :`<p style="color:var(--warn);font-size:12.5px;margin:0">${esc(db.mode||"Not connected")}</p><p class="note">${esc(db.note||db.error||"")}</p>`;
+  body.innerHTML=`<div style="margin-top:8px">${svc}</div>
+  <div class="cs-grid">
+    <div class="cs-box"><h5>Thinking engines</h5>${eng("claude","Claude (main)")}${eng("gpt","GPT (backup + tutor)")}
+      ${la?`<p class="note" style="margin:6px 0 0">Last answer by <b>${esc(la.engine||"?")}</b> ${ago(la.ts)}${u&&u.cacheRead?` · ${u.cacheRead} tokens from cache`:""}</p>`:`<p class="note" style="margin:6px 0 0">No answers yet.</p>`}
+      <p class="note" style="margin:6px 0 0">Research: ${Object.entries(b.research||{}).filter(([,on])=>on).map(([k])=>esc(k)).join(", ")||"none"}</p></div>
+    <div class="cs-box"><h5>Database</h5>${dbHtml}</div>
+    <div class="cs-box"><h5>Learning tracker</h5><div class="cs-big">${st.total||0}</div><p class="note" style="margin:0 0 6px">things recorded · chain ${vOk?'<b style="color:var(--ok)">intact ✓</b>':'<b style="color:var(--warn)">check</b>'}</p>${bars}</div>
+    <div class="cs-box"><h5>Learning over time</h5>${tlHtml}<p class="note" style="margin:6px 0 0">${b.learning?`${b.learning.approved} lessons in her core · ${b.learning.pending} waiting`:""}</p></div>
+  </div>
+  <div class="cs-box" style="margin-top:10px"><h5>Recent in her tracker</h5>${ev}</div>`;
+}
+async function paintTutors(){
+  const body=$("#tutBody"); if(!body) return;
+  const [p,l]=await Promise.all([BrainAPI.request("/caelia/tutor/proposals?status=pending",undefined,"GET"),BrainAPI.request("/caelia/lessons",undefined,"GET")]);
+  if(!p.ok){ body.innerHTML=`<p class="note">Couldn't load lessons (${esc(p.note||p.error||"error")}).</p>`; return; }
+  const tutors=(p.tutors||[]).map(t=>t==="gpt"?"GPT":"Claude").join(" + ")||"none (add API keys on the brain)";
+  const props=(p.proposals||[]).map(x=>`<div class="tut" data-pid="${esc(x.id)}">
+      <div class="rowflex"><span class="cs-tag">${x.tutor==="gpt"?"GPT":"Claude"} suggests</span><span class="note" style="margin:0 0 0 auto">${ago(x.ts)}</span></div>
+      <textarea data-ptext="${esc(x.id)}">${esc(x.lesson)}</textarea>
+      ${x.why?`<p class="note" style="margin:4px 0 0"><b>Why:</b> ${esc(x.why)}</p>`:""}${x.example?`<p class="note" style="margin:2px 0 0"><b>Example:</b> ${esc(x.example)}</p>`:""}
+      <div class="rowflex" style="margin-top:6px"><button class="btn sm" data-papprove="${esc(x.id)}">✓ Approve</button><button class="btn sm" data-preject="${esc(x.id)}">✕ Reject</button></div></div>`).join("");
+  const pend=l.ok?(l.pending||[]):[]; const appr=l.ok?(l.approved||[]):[];
+  const dirs=pend.map(x=>`<div class="kv"><span>📜 ${esc(String(x.directive).slice(0,140))}</span><button class="btn sm" data-dapprove="${esc(x.id)}">✓ Into her core</button></div>`).join("");
+  body.innerHTML=`<p class="note" style="margin:6px 0">Tutors available: <b>${esc(tutors)}</b></p>
+    ${props||`<p class="note">No suggestions waiting. Tap <b>Ask tutors to review</b> after you've talked with her a bit.</p>`}
+    ${dirs?`<h5 style="margin:12px 0 4px;font-size:11px;letter-spacing:1.2px;color:var(--dim)">YOUR DIRECTIVES WAITING</h5>${dirs}`:""}
+    <h5 style="margin:12px 0 4px;font-size:11px;letter-spacing:1.2px;color:var(--dim)">IN HER CORE (${appr.length})</h5>
+    ${appr.slice(0,12).map(x=>`<div class="kv"><span>🌟 ${esc(String(x.directive).slice(0,140))}</span><b class="note" style="margin:0">${esc(x.source||"")}</b></div>`).join("")||`<p class="note">No approved lessons yet.</p>`}`;
+}
+$("#csRefresh").onclick=()=>{ paintCaelia(); paintTutors(); };
+$("#tutReview").onclick=async()=>{ const btn=$("#tutReview"); btn.disabled=true; btn.textContent="Tutors reviewing…";
+  const r=await BrainAPI.request("/caelia/tutor/review",{}); btn.disabled=false; btn.textContent="Ask tutors to review";
+  toast(r.ok?`${(r.added||[]).length} new suggestion(s)`:(r.note||r.error||"Review failed")); paintTutors(); };
+$("#tutBody").addEventListener("click",async e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.papprove){ const id=b.dataset.papprove; const t=document.querySelector(`[data-ptext="${CSS.escape(id)}"]`);
+    const r=await BrainAPI.request("/caelia/tutor/proposals/"+encodeURIComponent(id)+"/approve",{lesson:t?t.value:undefined});
+    toast(r.ok?"Approved — Caelia will follow this lesson":(r.note||r.error)); if(r.ok) pushNeural("mem","Lesson approved: "+String(r.lesson||"").slice(0,40)); paintTutors(); paintCaelia(); }
+  if(b.dataset.preject){ const r=await BrainAPI.request("/caelia/tutor/proposals/"+encodeURIComponent(b.dataset.preject)+"/reject",{}); toast(r.ok?"Rejected":(r.note||r.error)); paintTutors(); }
+  if(b.dataset.dapprove){ const r=await BrainAPI.request("/caelia/lessons/"+encodeURIComponent(b.dataset.dapprove)+"/approve",{}); toast(r.ok?"Added to her core":(r.note||r.error)); paintTutors(); paintCaelia(); }
+});
 function showGate(msg){ $("#adminGate").style.display="flex"; $("#gateStatus").textContent=msg||""; setTimeout(()=>$("#gatePassword").focus(),50); }
 function hideGate(){ $("#adminGate").style.display="none"; $("#gatePassword").value=""; $("#gatePassword").type="password"; }
 $("#crystalBtn").onclick=async()=>{

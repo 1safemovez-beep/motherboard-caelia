@@ -514,7 +514,8 @@ header{grid-area:head;display:flex;align-items:center;gap:14px;padding:0 18px;
   <div style="width:min(340px,92vw);border-radius:18px;padding:20px;background:linear-gradient(180deg,#0a0f30,#05081e);border:1px solid rgba(56,225,255,.35);box-shadow:0 0 30px rgba(56,225,255,.2)">
     <h3 style="margin:0 0 4px;font-size:16px;letter-spacing:1px">△ Hidden Admin</h3>
     <p class="note" style="margin:0 0 10px">Sign in once on this device. You'll stay signed in.</p>
-    <input class="tinput" id="gatePassword" type="password" placeholder="Your password" autocomplete="current-password" style="width:100%;box-sizing:border-box;font-size:16px">
+    <div style="position:relative"><input class="tinput" id="gatePassword" type="password" placeholder="Your password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" style="width:100%;box-sizing:border-box;font-size:16px;padding-right:46px">
+      <button type="button" id="gateEye" aria-label="Show password" title="Show password" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;padding:6px 9px;cursor:pointer;opacity:.8">👁</button></div>
     <div class="rowflex" style="margin-top:10px"><button class="btn sm" id="gateSignIn">Sign in</button><button class="btn sm" id="gateCancel">Cancel</button></div>
     <p class="note" id="gateStatus" style="margin-top:8px"></p>
   </div>
@@ -1175,7 +1176,7 @@ function openAdmin(){ renderAdmin(); $("#admin").classList.add("open"); logActiv
     if(st) st.textContent=!r.ok?"○ Backend not reachable yet — local Motherboard mode remains available."
       :r.brain&&r.brain.reachable?"● Caelia Brain connected — backend healthy":"○ Backend is up, but it can't reach Caelia's brain yet."; },50); }
 function showGate(msg){ $("#adminGate").style.display="flex"; $("#gateStatus").textContent=msg||""; setTimeout(()=>$("#gatePassword").focus(),50); }
-function hideGate(){ $("#adminGate").style.display="none"; $("#gatePassword").value=""; }
+function hideGate(){ $("#adminGate").style.display="none"; $("#gatePassword").value=""; $("#gatePassword").type="password"; }
 $("#crystalBtn").onclick=async()=>{
   const v=await BrainAPI.verify();
   if(v.ok) return openAdmin();
@@ -1192,6 +1193,8 @@ async function gateSignIn(){
 $("#gateSignIn").onclick=gateSignIn;
 $("#gatePassword").addEventListener("keydown",e=>{ if(e.key==="Enter") gateSignIn(); });
 $("#gateCancel").onclick=hideGate;
+$("#gateEye").onclick=()=>{ const i=$("#gatePassword"), show=i.type==="password"; i.type=show?"text":"password";
+  $("#gateEye").style.opacity=show?"1":".8"; $("#gateEye").setAttribute("aria-label",show?"Hide password":"Show password"); i.focus(); };
 $("#admin").addEventListener("click",e=>{ if(e.target.id==="adminLock"){ BrainAPI.logout(); $("#admin").classList.remove("open"); toast("Locked — this device is signed out"); }});
 $("#adminClose").onclick=()=>$("#admin").classList.remove("open");
 $("#admin").addEventListener("click",e=>{ if(e.target.id==="admin") $("#admin").classList.remove("open"); });

@@ -510,13 +510,23 @@ header{grid-area:head;display:flex;align-items:center;gap:14px;padding:0 18px;
 </div>
 
 <!-- ================= HIDDEN ADMIN ================= -->
+<div id="adminGate" style="position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;background:rgba(2,4,18,.78);backdrop-filter:blur(6px)">
+  <div style="width:min(340px,92vw);border-radius:18px;padding:20px;background:linear-gradient(180deg,#0a0f30,#05081e);border:1px solid rgba(56,225,255,.35);box-shadow:0 0 30px rgba(56,225,255,.2)">
+    <h3 style="margin:0 0 4px;font-size:16px;letter-spacing:1px">△ Hidden Admin</h3>
+    <p class="note" style="margin:0 0 10px">Sign in once on this device. You'll stay signed in.</p>
+    <div style="position:relative"><input class="tinput" id="gatePassword" type="password" placeholder="Your password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" style="width:100%;box-sizing:border-box;font-size:16px;padding-right:46px">
+      <button type="button" id="gateEye" aria-label="Show password" title="Show password" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;padding:6px 9px;cursor:pointer;opacity:.8">👁</button></div>
+    <div class="rowflex" style="margin-top:10px"><button class="btn sm" id="gateSignIn">Sign in</button><button class="btn sm" id="gateCancel">Cancel</button></div>
+    <p class="note" id="gateStatus" style="margin-top:8px"></p>
+  </div>
+</div>
 <div id="admin">
   <div id="adminBox"><div id="adminIn">
     <div class="rowflex"><h2>△ HIDDEN ADMIN — CAELIA CORE</h2><button class="x" id="adminClose" style="margin-left:auto">✕</button></div>
     <p class="sub">Restricted — Alicia only. Nothing here is visible in normal navigation. <span class="backendTag">CORE INTERFACE</span></p>
     <div class="acard" style="margin-bottom:12px">
       <h4>🔐 Motherboard ↔ Caelia Brain</h4>
-      <div class="rowflex"><input class="tinput" id="brainToken" type="password" placeholder="Owner token (session only)"><button class="btn sm" id="brainConnect">Connect</button></div>
+      <div class="rowflex"><span class="note" id="signedInUntil" style="margin:0;flex:1"></span><button class="btn sm" id="adminLock">Lock (sign out)</button></div>
       <p class="note" id="brainStatus">Checking https://backend.caeliasystems.com …</p>
     </div>
     <div class="admingrid">
@@ -543,11 +553,14 @@ header{grid-area:head;display:flex;align-items:center;gap:14px;padding:0 18px;
       <div class="acard">
         <h4><span class="lk">🔐</span> Tom's Secret Box</h4>
         <div class="secretbox" id="tomBox">— sealed · Alicia only —</div>
-        <div class="rowflex" style="margin-top:8px">
-          <input class="tinput" id="tomInput" placeholder="Add to Tom's box...">
+        <div id="tomOld"></div>
+        <div class="fld" style="margin-top:8px"><input class="tinput" id="tomName" placeholder="Key name (e.g. Stripe secret key)" autocomplete="off" style="width:100%;box-sizing:border-box"></div>
+        <div class="rowflex" style="margin-top:6px;position:relative">
+          <input class="tinput" id="tomValue" type="password" placeholder="Key value" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" style="flex:1;padding-right:40px">
+          <button type="button" id="tomEye" aria-label="Show value" style="position:absolute;right:64px;background:none;border:none;font-size:15px;cursor:pointer;opacity:.8">👁</button>
           <button class="btn sm" id="tomAdd">Seal</button>
         </div>
-        <p class="note">Sealed entries are stored locally on this device only.</p>
+        <p class="note" id="tomNote">Encrypted on Caelia's backend. Only names are listed; a value shows only when you tap 👁, and every look is logged.</p>
       </div>
       <div class="acard">
         <h4><span class="lk">🗝️</span> Token Safe</h4>
@@ -642,7 +655,10 @@ Acceptance is never surrender, weakness, or approval of what is wrong.</div>
 const BrainAPI = {
   endpoint: "https://backend.caeliasystems.com/api",
   connected: false,
-  token: sessionStorage.getItem("caelia_owner_token") || "",
+  // Device pass from signing in with Alicia's password (kept on this device ~90 days).
+  pass: (()=>{ try{ sessionStorage.removeItem("caelia_owner_token"); const p=JSON.parse(localStorage.getItem("caelia_session")||"null");
+    return p&&p.token&&(!p.expiresAt||Date.parse(p.expiresAt)>Date.now())?p:null; }catch(e){ return null; } })(),
+  get token(){ return this.pass?this.pass.token:""; },
   async request(path, body, method="POST"){
     const headers={"Content-Type":"application/json"};
     if(this.token) headers.Authorization="Bearer "+this.token;
@@ -653,7 +669,23 @@ const BrainAPI = {
       return {ok:true,...data};
     }catch(e){ return {ok:false,error:"BACKEND_UNAVAILABLE",note:e.message}; }
   },
-  async health(){ const r=await this.request("/health",undefined,"GET"); this.connected=!!r.ok; return r; },
+  async health(){ const r=await this.request("/health",undefined,"GET"); this.connected=!!(r.ok&&r.brain&&r.brain.reachable); return r; },
+  // Is this device still signed in? {ok:true} | {ok:false,error:"UNAUTHORIZED"} | {ok:false,offline:true}
+  async verify(){
+    if(!this.pass) return {ok:false,error:"SIGNED_OUT"};
+    try{ const res=await fetch(this.endpoint+"/session",{headers:{Authorization:"Bearer "+this.token}});
+      if(res.status===401){ this.logout(); return {ok:false,error:"UNAUTHORIZED"}; }
+      return res.ok?{ok:true}:{ok:false,offline:true};
+    }catch(e){ return {ok:false,offline:true}; }
+  },
+  async login(password){
+    try{ const res=await fetch(this.endpoint+"/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password,device:"motherboard"})});
+      const d=await res.json().catch(()=>({}));
+      if(res.ok&&d.token){ this.pass={token:d.token,expiresAt:d.expiresAt}; try{localStorage.setItem("caelia_session",JSON.stringify(this.pass));}catch(e){} return {ok:true}; }
+      return {ok:false,status:res.status,error:d.error,note:d.note};
+    }catch(e){ return {ok:false,error:"BACKEND_UNAVAILABLE"}; }
+  },
+  logout(){ this.pass=null; try{localStorage.removeItem("caelia_session");}catch(e){} },
   async chat(message){ return this.request("/chat",{message}); },
   async teach(directive){ return this.request("/teach",{directive,source:"alicia"}); },
   async failsafe(prompt){ return this.request("/failsafe",{prompt}); },
@@ -662,7 +694,7 @@ const BrainAPI = {
     try{ if(state.voiceOut && "speechSynthesis" in window){ speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(text)); return {ok:true}; } }catch(e){}
     return {ok:false,error:"VOICE_UNAVAILABLE"};
   },
-  setToken(t){ this.token=(t||"").trim(); if(this.token) sessionStorage.setItem("caelia_owner_token",this.token); else sessionStorage.removeItem("caelia_owner_token"); }
+  setToken(){ /* replaced by password sign-in (login/logout) */ }
 };
 window.CaeliaBrainAPI=BrainAPI;
 </script>
@@ -1141,11 +1173,32 @@ $("#bellBtn").onclick=()=>{ modal(`<h3>🔔 Notifications</h3>${state.activity.s
 function pushNeural(k,t){ state.neural.unshift({k,t,time:"just now"}); state.neural=state.neural.slice(0,8); save(); renderNeural(); }
 
 /* ================= HIDDEN ADMIN ================= */
-$("#crystalBtn").onclick=()=>{ renderAdmin(); $("#admin").classList.add("open"); setTimeout(async()=>{
-  const inp=$("#brainToken"), st=$("#brainStatus"); if(inp) inp.value=BrainAPI.token;
-  const r=await BrainAPI.health(); if(st) st.textContent=r.ok?"● Caelia Brain connected — backend healthy":"○ Backend not reachable yet — local Motherboard mode remains available.";
-},50); logActivity("△","Hidden admin opened"); };
-$("#admin").addEventListener("click",e=>{ if(e.target.id==="brainConnect"){ BrainAPI.setToken($("#brainToken").value); BrainAPI.health().then(r=>{ $("#brainStatus").textContent=r.ok?"● Caelia Brain connected — token accepted":"○ Connection failed — check backend and token."; toast(r.ok?"Caelia Brain connected":"Could not connect to Caelia Brain"); }); }});
+function openAdmin(){ renderAdmin(); $("#admin").classList.add("open"); logActivity("△","Hidden admin opened");
+  const until=$("#signedInUntil"); if(until) until.textContent=BrainAPI.pass&&BrainAPI.pass.expiresAt?"● Signed in on this device until "+new Date(BrainAPI.pass.expiresAt).toLocaleDateString():"";
+  setTimeout(async()=>{ const st=$("#brainStatus"); const r=await BrainAPI.health();
+    if(st) st.textContent=!r.ok?"○ Backend not reachable yet — local Motherboard mode remains available."
+      :r.brain&&r.brain.reachable?"● Caelia Brain connected — backend healthy":"○ Backend is up, but it can't reach Caelia's brain yet."; },50); }
+function showGate(msg){ $("#adminGate").style.display="flex"; $("#gateStatus").textContent=msg||""; setTimeout(()=>$("#gatePassword").focus(),50); }
+function hideGate(){ $("#adminGate").style.display="none"; $("#gatePassword").value=""; $("#gatePassword").type="password"; }
+$("#crystalBtn").onclick=async()=>{
+  const v=await BrainAPI.verify();
+  if(v.ok) return openAdmin();
+  if(v.offline && BrainAPI.pass) return openAdmin(); // signed in earlier, backend just unreachable: local mode
+  showGate(v.offline?"Can't reach the backend right now.":"");
+};
+async function gateSignIn(){
+  const pw=$("#gatePassword").value; if(!pw){ $("#gateStatus").textContent="Type your password first."; return; }
+  $("#gateSignIn").disabled=true; $("#gateStatus").textContent="Signing in…";
+  const r=await BrainAPI.login(pw); $("#gateSignIn").disabled=false;
+  if(r.ok){ hideGate(); toast("Signed in — you'll stay signed in on this device"); openAdmin(); }
+  else $("#gateStatus").textContent=r.status===401?"That password isn't right.":(r.note||"Sign-in failed ("+(r.error||"error")+").");
+}
+$("#gateSignIn").onclick=gateSignIn;
+$("#gatePassword").addEventListener("keydown",e=>{ if(e.key==="Enter") gateSignIn(); });
+$("#gateCancel").onclick=hideGate;
+$("#gateEye").onclick=()=>{ const i=$("#gatePassword"), show=i.type==="password"; i.type=show?"text":"password";
+  $("#gateEye").style.opacity=show?"1":".8"; $("#gateEye").setAttribute("aria-label",show?"Hide password":"Show password"); i.focus(); };
+$("#admin").addEventListener("click",e=>{ if(e.target.id==="adminLock"){ BrainAPI.logout(); $("#admin").classList.remove("open"); toast("Locked — this device is signed out"); }});
 $("#adminClose").onclick=()=>$("#admin").classList.remove("open");
 $("#admin").addEventListener("click",e=>{ if(e.target.id==="admin") $("#admin").classList.remove("open"); });
 function renderAdmin(){
@@ -1167,9 +1220,50 @@ $$("#teachCtls button").forEach(b=>b.onclick=()=>{
   if(b.dataset.t==="+ custom directive"){ $("#teachInput").focus(); return; } teachDirective(b.dataset.t); });
 $("#teachSend").onclick=()=>{ teachDirective($("#teachInput").value.trim()); $("#teachInput").value=""; };
 $("#teachInput").onkeydown=e=>{ if(e.key==="Enter") $("#teachSend").click(); };
-function paintTom(){ $("#tomBox").textContent=state.tom&&state.tom.length?state.tom.map(t=>"▪ "+t).join("\n"):"— sealed · Alicia only —"; }
-$("#tomAdd").onclick=()=>{ const v=$("#tomInput").value.trim(); if(!v)return;
-  (state.tom||(state.tom=[])).push(v); save(); paintTom(); $("#tomInput").value=""; toast("Sealed in Tom's box."); };
+/* ---- Tom's Secret Box: the backend's encrypted vault (container "toms-box") ---- */
+const tomErr=r=>{ const why=r.note||r.error||""; return /VAULT_LOCKED/.test(why)?"The box is locked: set VAULT_MASTER_KEY (password C) on the backend service."
+  :/UNAUTHORIZED/.test(why)?"Please sign in again.":"Couldn't reach Tom's box ("+(why||"error")+")."; };
+async function paintTom(){
+  const box=$("#tomBox"); box.textContent="Opening Tom's box…";
+  const r=await BrainAPI.request("/vault/toms-box/secrets",undefined,"GET");
+  if(!r.ok){ box.textContent=tomErr(r); paintTomOld(); return; }
+  const list=r.secrets||[];
+  box.innerHTML=list.length?list.map(x=>`<div class="kv" data-tid="${x.id}"><span>🗝 ${esc(x.name)}</span>
+    <span class="tomval" id="tv-${x.id}" style="font-family:monospace;font-size:11px;word-break:break-all"></span>
+    <span style="display:flex;gap:4px;flex-shrink:0"><button class="btn sm" data-tshow="${x.id}" title="Show for 30 seconds">👁</button>
+    <button class="btn sm" data-tcopy="${x.id}" title="Copy">📋</button>
+    <button class="btn sm" data-tdel="${x.id}" data-tname="${esc(x.name)}" title="Delete">🗑</button></span></div>`).join("")
+    :"— empty · sealed · Alicia only —";
+  paintTomOld();
+}
+async function tomValue(id){ const r=await BrainAPI.request("/vault/toms-box/secrets/"+encodeURIComponent(id),undefined,"GET"); if(!r.ok){ toast(tomErr(r)); return null; } return r.value; }
+$("#tomBox").addEventListener("click",async e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.tshow){ const v=await tomValue(b.dataset.tshow); if(v==null) return; const el=$("#tv-"+b.dataset.tshow); el.textContent=v; setTimeout(()=>{ el.textContent=""; },30000); }
+  if(b.dataset.tcopy){ const v=await tomValue(b.dataset.tcopy); if(v==null) return; try{ await navigator.clipboard.writeText(v); toast("Copied"); }catch(_){ toast("Couldn't copy — tap 👁 instead"); } }
+  if(b.dataset.tdel){ if(!confirm("Delete \""+b.dataset.tname+"\" from Tom's box? This can't be undone.")) return;
+    const r=await BrainAPI.request("/vault/toms-box/secrets/"+encodeURIComponent(b.dataset.tdel),undefined,"DELETE"); toast(r.ok?"Deleted from Tom's box":tomErr(r)); paintTom(); }
+});
+$("#tomAdd").onclick=async()=>{
+  const name=$("#tomName").value.trim(), value=$("#tomValue").value;
+  if(!name||!value){ toast("Give the key a name and a value."); return; }
+  const r=await BrainAPI.request("/vault/toms-box/secrets",{name,value});
+  if(!r.ok){ toast(tomErr(r)); return; }
+  $("#tomName").value=""; $("#tomValue").value=""; $("#tomValue").type="password";
+  toast("Sealed in Tom's box (encrypted)."); paintTom();
+};
+$("#tomEye").onclick=()=>{ const i=$("#tomValue"); i.type=i.type==="password"?"text":"password"; };
+// Older Tom's box entries were saved in this browser only, unencrypted. Offer to move or delete them.
+function paintTomOld(){
+  const old=state.tom||[]; const el=$("#tomOld");
+  if(!old.length){ el.innerHTML=""; return; }
+  el.innerHTML=`<div class="note" style="margin-top:8px;color:var(--warn)">⚠ ${old.length} older entr${old.length===1?"y is":"ies are"} saved in this browser only, not encrypted.</div>
+    <div class="rowflex" style="margin-top:6px"><button class="btn sm" id="tomMove">Move into encrypted box</button><button class="btn sm" id="tomForget">Delete from this browser</button></div>`;
+  $("#tomMove").onclick=async()=>{ let moved=0;
+    for(let i=0;i<old.length;i++){ const r=await BrainAPI.request("/vault/toms-box/secrets",{name:"moved-from-browser-"+(i+1),value:String(old[i])}); if(!r.ok){ toast(tomErr(r)); break; } moved++; }
+    if(moved===old.length){ state.tom=[]; save(); toast("Moved "+moved+" into the encrypted box. Rename them anytime."); } paintTom(); };
+  $("#tomForget").onclick=()=>{ if(!confirm("Delete the old unencrypted entries from this browser?")) return; state.tom=[]; save(); paintTomOld(); toast("Removed from this browser."); };
+}
 function paintTokens(){ $("#tokenList").innerHTML=state.tokens.map(t=>`<div class="kv"><span>🗝 ${esc(t.n)}</span><b>NAME ONLY</b></div>`).join("")||`<p style="font-size:11px;color:var(--faint)">No tokens stored.</p>`; }
 $("#tokenAdd").onclick=()=>{ const v=$("#tokenName").value.trim(); if(!v)return;
   state.tokens.push({n:v,ts:Date.now()}); save(); paintTokens(); $("#tokenName").value=""; toast("Token name stored. Enter the value at the service itself."); };
